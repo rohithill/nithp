@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, url_for
-from .nith_result.nith_result import result
-from .nith_result_api.main import api
+from nith_result.nith_result import result
+from nith_result_api.main import api
 
 app = Flask(__name__)
 
@@ -17,3 +17,4 @@ def home():
 @app.route('/about/')
 def about():
     return "Hi! My name is SimpleX."
+
