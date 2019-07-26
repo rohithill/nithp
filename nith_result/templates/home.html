@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head><title>NITH Result</title>
+        <meta name="viewport" content="width-device-width, initial-scale=1.0">
+        <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
+    </head>
+    <body>
+        <div>
+            <noscript>Enable javascript or go to /result/rollnumber </noscript>
+        </div>
+        Enter Roll Number: 
+        <input class="input-lg" id="roll">
+        <button type="button" onclick="getr()">Get Result</button>
+        <script>
+            function getr() {
+                var rn = document.getElementById('roll');
+                let rnurl = "/result/" + rn.value;
+                location.assign(rnurl);
+            }
+        </script>
+    </body>
+</html>
