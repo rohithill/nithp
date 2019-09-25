@@ -14,6 +14,7 @@ from flask import url_for
 
 @result.route('/<string:rank>/')
 def get_result(rank):
+    rank = rank.lower()
     # return "ggod"
     conn = sqlite3.connect('mydb.db')
     cur = conn.execute('SELECT result FROM students WHERE rollno=(?)',(rank,))
