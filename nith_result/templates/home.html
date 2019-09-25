@@ -3,14 +3,29 @@
     <head><title>NITH Result</title>
         <meta name="viewport" content="width-device-width, initial-scale=1.0">
         <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <style>
+        div {
+            height: 100px;
+            /* line-height: 100px; */
+            text-align: center;
+        }
+        </style>
     </head>
     <body>
         <div>
             <noscript>Enable javascript or go to /result/rollnumber </noscript>
         </div>
-        Enter Roll Number: 
-        <input class="input-lg" id="roll">
-        <button type="button" onclick="getr()">Get Result</button>
+        <div class="row col-md-12 col-ms-12">
+        <div class="col-md-3  col-ms-2" >
+
+        </div>
+        <input class="form-control col-ms-6 col-md-6" placeholder="Roll Number" id="roll">
+        <button type="button" class="btn btn-primary" onclick="getr()" style="height: 38px; margin-left: 10px" ><i class="fa fa-search"></i></button>
+        <!-- <button class="col-md-1" type="button" onclick="getr()">G</button> -->
+        </div>
+        <!-- <button type="button" class="btn btn-primary btn-lg col-md-1 " onclick="">N</button> -->
+
         <script>
             function getr() {
                 var rn = document.getElementById('roll');
