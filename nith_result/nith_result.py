@@ -12,15 +12,15 @@ import sqlite3
 
 from flask import url_for
 
-@result.route('/<string:rank>/')
-def get_result(rank):
-    rank = rank.lower()
+@result.route('/<string:rollno>/')
+def get_result(rollno):
+    rollno = rollno.lower()
     # return "ggod"
     conn = sqlite3.connect('mydb.db')
-    cur = conn.execute('SELECT result FROM students WHERE rollno=(?)',(rank,))
+    cur = conn.execute('SELECT result FROM students WHERE rollno=(?)',(rollno,))
     result = cur.fetchone()
     if result is None:
-        return "Roll no not in database."
+        return "<h1>Roll no not in database.</h1>"
     else:
         result = json.loads(result[0])
         return render_template('result.html',tables=result)
