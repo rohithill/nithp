@@ -1,0 +1,18 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+click = "==7.0"
+flask = "==1.1.1"
+gunicorn = "==19.9.0"
+itsdangerous = "==1.1.0"
+jinja2 = "==2.10.1"
+markupsafe = "==1.1.1"
+werkzeug = "==0.15.5"
+
+[requires]
+python_version = "3.7"
