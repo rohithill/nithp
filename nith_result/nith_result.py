@@ -12,24 +12,15 @@ import sqlite3
 
 from flask import url_for
 
-# @result.route('/<string:rollno>/')
-# def get_result(rollno):
-#     rollno = rollno.lower()
-#     conn = sqlite3.connect('nithResult.db')
-#     cur = conn.execute('SELECT semester, code, title, credits, grade, grade/credits as pointer FROM result NATURAL JOIN course WHERE rollno=(?) ORDER BY semester ASC',(rollno,))
-#     result = cur.fetchall()
-#     return jsonify(result)
-@result.route('/<string:rollno>',defaults = {'sem':5})
-# @result.route('/<string:rollno>/<int:sem>')
-def get_sem_result(rollno,sem):
+@result.route('/<string:rollno>/')
+def get_result(rollno):
     rollno = rollno.lower()
-    conn = sqlite3.connect('nithResult.db')
-    cur = conn.execute('SELECT semester, code, title, credits, grade, grade/credits as pointer FROM result NATURAL JOIN course WHERE rollno=(?) and semester = (?) ORDER BY semester ASC',(rollno,sem))
-    result = cur.fetchall()
-    return jsonify(result)
-
-    # if result is None:
-        # return "<h1>Roll no not in database.</h1>"
-    # else:
-        # result = json.loads(result[0])
-        # return render_template('result.html',tables=result)
+    # return "ggod"
+    conn = sqlite3.connect('mydb.db')
+    cur = conn.execute('SELECT result FROM students WHERE rollno=(?)',(rollno,))
+    result = cur.fetchone()
+    if result is None:
+        return "<h1>Roll no not in database.</h1>"
+    else:
+        result = json.loads(result[0])
+        return render_template('result.html',tables=result)
