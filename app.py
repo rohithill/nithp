@@ -7,10 +7,11 @@ app.config['SECRET_KEY'] = 'you-will-never-guess'
 app.register_blueprint(result,url_prefix='/result/')
 app.register_blueprint(api,url_prefix='/api/')
 
-
 @app.route('/')
 def home():
+    #currently redirecting everything to results website
     return redirect(url_for('result.home'))
+
     # return render_template('index.html')
 
 # To print all paths
@@ -22,4 +23,7 @@ def about():
 @app.route('/handle_data',methods=['POST'])
 def handle_data():
     roll_no = request.form['roll']
-    return redirect('/result/'+roll_no)
+    return redirect(url_for('result.get_result',rollno=roll_no))
+
+if __name__ == '__main__':
+    app.run(debug=True)
