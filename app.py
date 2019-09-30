@@ -7,7 +7,6 @@ app.config['SECRET_KEY'] = 'you-will-never-guess'
 app.register_blueprint(result,url_prefix='/result/')
 app.register_blueprint(api,url_prefix='/api/')
 
-
 @app.route('/')
 def home():
     return redirect(url_for('result.home'))
@@ -19,7 +18,10 @@ def home():
 def about():
     return "Hi! My name is SimpleX."
 
-@app.route('/handle_data',methods=['POST'])
-def handle_data():
-    roll_no = request.form['roll']
-    return redirect('/result/'+roll_no)
+# @app.route('/handle_data',methods=['POST'])
+# def handle_data():
+#     roll_no = request.form['roll']
+#     return redirect('/result/'+roll_no)
+
+if __name__ == '__main__':
+    app.run(debug=True)
