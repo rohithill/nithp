@@ -1,18 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>NITH Result</title>
-  <meta name="viewport" content="width-device-width, initial-scale=1.0">
-  <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
-</head>
-<body>
-  <div class="jumbotron" style="background: white;">
-    <form action="{{ url_for('result.handle_data') }}" method="POST" style="text-align: center;">
-      <div class="form-group">
-        <input type="text" class="form-control" id="roll" placeholder="Enter Roll No." name="roll" style="margin: auto; max-width: 300px;">
-      </div>
-      <button type="submit" class="btn btn-primary">Get Result</button>
-    </form>    
-  </div>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block content %} 
+<div class="jumbotron" style="background: white;">
+  <form action="{{ url_for('result.handle_data') }}" method="POST" style="text-align: center;">
+    <div class="form-group">
+      <input type="text" class="form-control" id="roll" required="required" placeholder="Enter Roll No." name="roll" style="margin: auto; max-width: 300px;">
+    </div>
+    <button type="submit" class="btn btn-primary">Get Result</button>
+  </form>  
+</div>
+{% endblock %}

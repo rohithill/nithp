@@ -9,19 +9,14 @@ app.register_blueprint(api,url_prefix='/api/')
 
 @app.route('/')
 def home():
-    return redirect(url_for('result.home'))
-    # return render_template('index.html')
+    # return redirect(url_for('result.home'))
+    return render_template('index.html')
 
 # To print all paths
-# print(app.url_map)
 @app.route('/about/')
 def about():
     return "Hi! My name is SimpleX."
 
-# @app.route('/handle_data',methods=['POST'])
-# def handle_data():
-#     roll_no = request.form['roll']
-#     return redirect('/result/'+roll_no)
-
 if __name__ == '__main__':
+    # print(app.url_map)
     app.run(debug=True)

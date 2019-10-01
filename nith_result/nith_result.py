@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, redirect
+from flask import Flask, Blueprint, render_template, redirect, request, url_for
+from nith_result_api.main import get_result as api_result
 
 result = Blueprint('result',__name__,template_folder='templates',static_folder='static')
 
@@ -6,21 +7,11 @@ result = Blueprint('result',__name__,template_folder='templates',static_folder='
 def home():
     return render_template('home.html')
 
-from flask import Flask,request, jsonify, session, g, make_response
-import json
-import sqlite3
-import urllib
-from flask import url_for
-
 @result.route('/<string:rollno>/')
 def get_result(rollno):
     rollno = rollno.lower()
-    from nith_result_api.main import get_result
-    result = get_result(rollno)
-
-    # print(result)
-    return render_template('result.html',tables=result)
-    return "GOOD"
+    result = api_result(rollno)
+    return render_template('result_api.html',table=result)
 
 @result.route('/handle_data',methods=['POST'])
 def handle_data():
