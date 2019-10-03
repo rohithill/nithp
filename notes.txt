@@ -1,0 +1,1 @@
+If you comment the html code with html comments with jinja templates in it, jinja will still parse those and may raise error.

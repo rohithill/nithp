@@ -5,7 +5,7 @@
   <title>NITH Result</title>
   <meta name="viewport" content="width-device-width, initial-scale=1.0">
   <link href="{{ url_for('static',filename='bootstrap.min.css') }}" rel="stylesheet" media="screen">
-  <script src="{{ url_for('static',filename='bootstrap.min.js') }}"></script>
+  <!-- <script src="{{ url_for('static',filename='bootstrap.min.js') }}"></script> -->
   <script src="{{ url_for('.static',filename='main.js') }}"></script>
     <style>
       body {
@@ -17,7 +17,7 @@
 
 <body style="background: rgb(255, 255, 255);">
 <header class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar fixed-top"
-  style="background: rgb(6, 40, 63);">
+  style="background: rgb(51, 55, 58);">
   <div class="navbar-nav-scroll">
     <ul class="navbar-nav bd-navbar-nav flex-row">
       <li class="nav-item">
@@ -29,10 +29,10 @@
       <li class="nav-item">
         <a class="nav-link active" href="#">GitHub</a>
       </li>
+    </ul>
   </div>
 </header>
 {% block content %}
 {% endblock %}
 </body>
-
 </html>

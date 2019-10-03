@@ -5,6 +5,7 @@ from docs.main import docs
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'you-will-never-guess'
+# app.config['EXPLAIN_TEMPLATE_LOADING'] = True
 app.register_blueprint(result,url_prefix='/result/')
 app.register_blueprint(api,url_prefix='/api/')
 app.register_blueprint(docs,url_prefix='/docs/')
@@ -16,8 +17,7 @@ def home():
 @app.route('/about/')
 def about():
     return "Hi! I'm SimpleX."
-app.config['EXPLAIN_TEMPLATE_LOADING'] = True
 if __name__ == '__main__':
     # To print all paths
     # print(app.url_map)
-    app.run(debug=True)
+    app.run(debug=True,host='0.0.0.0')

@@ -1,6 +1,5 @@
 // This code is from w3schools
 function sortTable(table_id,n) {
-    console.log("From here\n");
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
   table = document.getElementById(table_id);
   switching = true;
@@ -23,14 +22,19 @@ function sortTable(table_id,n) {
       y = rows[i + 1].getElementsByTagName("TD")[n];
       /* Check if the two rows should switch place,
       based on the direction, asc or desc: */
+      var int = Number;
+      if (isNaN(x.innerHTML.toLowerCase())) int = function(x) { return x; }
+    //   console.log("Dsadfaskdlfjaslkdf\n");
       if (dir == "asc") {
-        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+        // console.log(int(x.innerHTML.toLowerCase()));
+        if (int(x.innerHTML.toLowerCase()) > int(y.innerHTML.toLowerCase())) {
           // If so, mark as a switch and break the loop:
           shouldSwitch = true;
           break;
+          
         }
       } else if (dir == "desc") {
-        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+        if (int(x.innerHTML.toLowerCase()) < int(y.innerHTML.toLowerCase())) {
           // If so, mark as a switch and break the loop:
           shouldSwitch = true;
           break;
