@@ -1,0 +1,25 @@
+{% extends 'nith_result/base.html' %}
+{% block content %}
+<table class="table" id="cumulative" style="margin-left:auto;margin-right:auto;max-width: 700px;">
+  <thead>
+    <tr>
+      {% for cell in table_head %}
+      <th scope="col" onclick="sortTable('cumulative','{{ loop.index0 }}')">{{ cell|title }}</th>      
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for result in table_body %}
+    <tr>
+      {% for cell in result %}
+      {% if loop.first %}
+      <td><a href="{{ url_for('.result_student',rollno=cell) }}">{{ cell }}</a></td>
+      {% else %}
+      <td>{{ cell }}</td>
+      {% endif %}
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>NITH Result</title>
+  <meta name="viewport" content="width-device-width, initial-scale=1.0">
+  <link href="{{ url_for('static',filename='bootstrap.min.css') }}" rel="stylesheet">
+  <!-- <script src="{{ url_for('static',filename='bootstrap.min.js') }}"></script> -->
+  <script src="{{ url_for('.static',filename='main.js') }}"></script>
+    <style>
+      body {
+        /* to prevent overlapping of navigation bar and body */
+        padding-top: 60px;
+      }
+    </style>
+</head>
+
+<body style="background: rgb(255, 255, 255);">
+<header class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar fixed-top"
+  style="background: rgb(51, 55, 58);">
+  <div class="navbar-nav-scroll">
+    <ul class="navbar-nav bd-navbar-nav flex-row">
+      <li class="nav-item">
+        <a class="nav-link active" href="{{ url_for('home') }}">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" href="{{ url_for('.home') }}">Result</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" href="#">GitHub</a>
+      </li>
+    </ul>
+  </div>
+</header>
+{% block content %}
+{% endblock %}
+</body>
+</html>

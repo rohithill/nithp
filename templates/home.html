@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="{{ url_for('static',filename='bootstrap.min.css') }}" rel="stylesheet" media="screen">
+  <style>
+    .card {
+      margin: 10px;
+    }
+  </style>
+  <title>SimpleX Projects</title>
+</head>
+
+<body>
+  <div class="jumbotron bg-transparent">
+    <div class="row" style="padding: 10px;">
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">NITH Result</h5>
+          <p class="card-text">This is a webapp on which you can view your result.</p>
+          <a href="{{ url_for('result.home') }}" class="btn btn-primary">Live Demo</a>
+        </div>
+      </div>
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">NITH Result API</h5>
+          <p class="card-text">API for developers to get data from this website.</p>
+          <a href="{{ url_for('docs.home') }}" class="btn btn-primary">See docs</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
