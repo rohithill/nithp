@@ -15,7 +15,6 @@ def search():
 @api.route('/<string:rollno>/')
 @api.route('/<string:rollno>/<int:sem>')
 def getresult(rollno,sem=None):
-    # return "GOOD"
     response = get_single_result(rollno,sem)
     return jsonify(response)
 
@@ -69,4 +68,7 @@ def get_cgpi(rollno):
     rollno = rollno.lower()
     conn = sqlite3.connect('nithResult.db')
     result = conn.execute('SELECT cgpi FROM cgpi WHERE rollno=(?)',(rollno,))
-    return result.fetchone()
+    cgpi = result.fetchone()
+    if cgpi:
+        cgpi = cgpi[0]
+    return cgpi
