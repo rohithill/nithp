@@ -8,5 +8,38 @@
 </head>
 <body>
   <h1>Welcome to the Documentation</h1>
+  API is available at https://nithp.herokuapp.com/api/ <br>
+
+  Here is a list of api endpoints: 
+  <p>
+    method: search?rollno={rollnumber} <br>
+    return value: JSON of a table with two keys head and body. <br>
+    head contains the headers of the table. <br>
+    body contains the body of the table. <br>
+    Usage: <br>
+    https://nithp.herokuapp.com/api/search?rollno=17101 to get the result of a single student <br>
+    https://nithp.herokuapp.com/api/search?rollno=171% to get the result of all students who are studying in civil branch of 2017-2021 batch. <br>
+    
+    Supports SQL like pattern matching.
+  </p>
+  <p>
+    method: {rollnumber} <br>
+    return value: JSON <br>
+    Return the complete result of a student with given rollnumber. <br>
+    Keys: head,body,fname (father's name),name,rollno <br>
+    If rollnumber is invalid then name is null. <br>
+    Usage: <br>
+    https://nithp.herokuapp.com/api/17101/
+  </p>
+  <p>
+    method: {rollnumber}/{semester}
+    return Value : JSON <br>
+    Similar to above method, but returns result of a single semester only. If semester is invalid the body is empty <br>
+  </p>
+  <p>
+    method: cgpi/{rollnumber} <br>
+    return value: A float. <br>
+    If rollnumber is invalid, returns a null value <br>
+  </p>
 </body>
 </html>
