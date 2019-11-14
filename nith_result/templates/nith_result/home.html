@@ -1,10 +1,45 @@
 {% extends 'nith_result/base.html' %}
 {% block content %} 
-<div class="jumbotron" style="background: white;">
-  <form action="{{ url_for('result.search') }}" method="GET" style="text-align: center;">
+<div class="container" style="background: white; margin-top: 2%; text-align: center;">
+  <form class="form-horizontal" action="{{ url_for('result.search') }}" method="GET">
+    <legend><center><h2><b>Check Result</b></h2></center></legend><br>
     <div class="form-group">
-      <input type="text" class="form-control" id="roll" required="required" placeholder="Enter Roll No." name="roll" style="margin: auto; max-width: 300px;">
+      <label class="col-md-4 control-label">Student Name</label>  
+      <div class="col-md-4 inputGroupContainer">
+        <div class="input-group">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+          <input  name="name" placeholder="Student Name" class="form-control"  type="text">
+        </div>
+      </div>
     </div>
+    <div class="form-group">
+      <label class="col-md-4 control-label">Roll No.</label>  
+      <div class="col-md-4 inputGroupContainer">
+        <div class="input-group">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+          <input  name="roll" id="roll" placeholder="Roll No." class="form-control"  type="text">
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-md-4 control-label">CGPI Range</label>  
+      <div class="col-md-5 inputGroupContainer">
+        <div class="input-group">
+          <!-- <div class="col-md-1"></div> -->
+          <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+          <div class="col-md-4" style="width: 20%;">
+            <input name="cgpi_from" value="1" class="form-control" min="0" max="10"  type="number" step="0.01">
+          </div>
+          <div class="col-md-4" style="width: 20%;">
+            <input  name="cgpi_to" value="10" class="form-control" min="0" max="10"  type="number" step="0.01">
+          </div>
+        </div>
+      </div>
+    </div>
+        <!-- #Rohit hill code -->
+    <!-- <div class="form-group">
+      <input type="text" class="form-control" id="roll" required="required" placeholder="Enter Roll No." name="roll" style="margin: auto; max-width: 300px;">
+    </div> --> 
     <button type="submit" class="btn btn-primary">Get Result</button>
   </form>  
 </div>
