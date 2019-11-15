@@ -58,7 +58,9 @@ def home():
 @result.route('/student')
 def result_student():
     rollno = request.args.get('rollno')
+    print(request.args,request.values)
     result = get_single_result(rollno)
+    # print(result)
 
     # Add grade column as it's not returned by get_single_result
     result['head'] = (*result['head'],'grade')
@@ -76,10 +78,14 @@ def result_student():
 def search():
     rollno = request.args.get('roll')
     rollno = rollno.lower()
-
+    name = request.args.get('name','%')
+    mincgpi = request.args.get('mincgpi') or None
+    maxcgpi = request.args.get('maxcgpi') or None
+    print(mincgpi,maxcgpi,'here')
+    print(request.values)
     import time
     st = time.perf_counter()
-    response = api_result(rollno)    
+    response = api_result(rollno,name,mincgpi,maxcgpi)    
     et = time.perf_counter()
     print("Time taken to process query: ", et - st)
     # print(response)

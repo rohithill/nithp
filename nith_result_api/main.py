@@ -23,7 +23,14 @@ def getcgpi(rollno):
     response = get_cgpi(rollno)
     return jsonify(response)
 
-def find_result(rollno):
+def find_result(rollno,name,mincgpi,maxcgpi):
+    
+    if not mincgpi:
+        mincgpi = 0
+    if not maxcgpi:
+        maxcgpi = 10
+    mincgpi = float(mincgpi)
+    maxcgpi = float(maxcgpi)
     import time
     st = time.perf_counter()
     diff = lambda: time.perf_counter() - st
@@ -32,7 +39,13 @@ def find_result(rollno):
     'body':[]}
     conn = sqlite3.connect('nithResult.db')
     print('Created connnection: ',diff())
-    result = conn.execute('SELECT rollno,name,father_name,cgpi FROM student NATURAL JOIN cgpi WHERE rollno LIKE (?) ORDER BY cgpi DESC',(rollno,)).fetchall()
+    # print(type(mincgpi),mincgpi,maxcgpi)
+    
+    result = conn.execute('SELECT rollno,name,father_name,cgpi FROM student NATURAL JOIN cgpi \
+    WHERE name LIKE (?) AND rollno LIKE (?) AND cgpi >= (?) AND cgpi <= (?) ORDER BY cgpi DESC',
+    (name,rollno,mincgpi,maxcgpi)).fetchall()
+
+    # print('cur_result',result,name,rollno,mincgpi,maxcgpi)
     print('Got result',diff())
     response_array['body'] = result
     return response_array
