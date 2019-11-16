@@ -76,13 +76,13 @@ def result_student():
 @result.route('/search')
 @gzipped
 def search():
-    rollno = request.args.get('roll')
+    rollno = request.args.get('roll') or r'%'
     rollno = rollno.lower()
-    name = request.args.get('name','%')
+    name = request.args.get('name') or r'%'
     mincgpi = request.args.get('mincgpi') or None
     maxcgpi = request.args.get('maxcgpi') or None
-    print(mincgpi,maxcgpi,'here')
-    print(request.values)
+    print(mincgpi,maxcgpi,name,rollno,'here')
+    # print(request.values)
     import time
     st = time.perf_counter()
     response = api_result(rollno,name,mincgpi,maxcgpi)    
