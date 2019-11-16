@@ -76,6 +76,10 @@ def result_student():
 def search():
     rollno = request.args.get('roll')
     rollno = rollno.lower()
+    name = request.args.get('name')
+    mnc = request.args.get('cgpi_from')
+    mc = request.args.get('cgpi_upto')
+    print(name, mnc, mc)
 
     import time
     st = time.perf_counter()
