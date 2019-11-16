@@ -20,11 +20,11 @@
       </tbody>
     </table>
   <!-- </div> -->
-  <table class="table table-striped" id="{{ rollno }}">
+  <table id="showResult" class="table bs-select table-striped" id="{{ rollno }}">
     <thead>
       <tr>
         {% for cell in table.get('head') %}
-        <th scope="col" onclick="sortTable('{{ rollno }}','{{ loop.index0 }}')">{{ cell|title }}</th>
+        <th scope="col" >{{ cell|title }}</th>
         {% endfor %}
       </tr>
     </thead>
