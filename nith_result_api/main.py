@@ -24,11 +24,11 @@ def getcgpi(rollno):
     return jsonify(response)
 
 def find_result(rollno,name,mincgpi,maxcgpi):
-    
     if not mincgpi:
         mincgpi = 0
     if not maxcgpi:
         maxcgpi = 10
+    name = '%' + name + '%'
     mincgpi = float(mincgpi)
     maxcgpi = float(maxcgpi)
     import time
