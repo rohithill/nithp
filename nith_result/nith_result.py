@@ -74,7 +74,7 @@ def result_student():
     return render_template('nith_result/result_student.html',table=result)
 
 @result.route('/search')
-@gzipped
+# @gzipped
 def search():
     rollno = request.args.get('roll') or r'%'
     rollno = rollno.lower()
