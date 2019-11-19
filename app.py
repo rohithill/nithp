@@ -11,6 +11,8 @@ app.register_blueprint(result,url_prefix='/result/')
 app.register_blueprint(api,url_prefix='/api/')
 app.register_blueprint(docs,url_prefix='/docs/')
 
+# https://kb.sites.apiit.edu.my/knowledge-base/how-to-gzip-response-in-flask/
+
 import gzip, functools
 from io import BytesIO as IO
 from flask import after_this_request, request
@@ -47,20 +49,10 @@ def gzipped(f):
         return f(*args, **kwargs)
     return view_func
 
-# def customResponse(rv,from_error_handler=False):
-#     print(type(rv),from_error_handler)
-#     return app._override(rv,from_error_handler)
-
-# app._override = app.finalize_request
 app.finalize_request = gzipped(app.finalize_request)
-# def get_db():
-#     g.db = 66   
-#     print('dbms')
-#     if 'db' not in g:
 
 @app.route('/')
 def home():
-    # g.db
     return render_template('home.html')
 
 @app.route('/about/')
@@ -68,6 +60,5 @@ def about():
     return "Hi! I'm SimpleX."
 
 if __name__ == '__main__':
-    # To print all paths
-    # print(app.url_map)
-    app.run(debug=True,host='0.0.0.0')
+    # print(app.url_map) # To print all paths
+    app.run()
