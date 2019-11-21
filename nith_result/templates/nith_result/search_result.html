@@ -4,7 +4,7 @@
   <thead>
     <tr>
       {% for cell in table_head %}
-      <th scope="col">{{ cell|title }}</th>      
+      <th scope="col">{{ cell|title }}&nbsp<i class="fa fa-sort"></i></th>      
       {% endfor %}
     </tr>
   </thead>
@@ -22,80 +22,13 @@
     {% endfor %}
   </tbody>
 </table>
-<div id="chart"></div> 
-<script src='https://d3js.org/d3.v5.min.js'></script>     
-<script id="rendered-js"> 
-    const margin = { 
-        top: 10, 
-        right: 20, 
-        bottom: 30, 
-        left: 30 
-    }; 
-      
-    // Dimensions: 400 x 400 
-    // used for the initial rendering 
-    // width to height proportion  
-    // its preserved as the chart is resized 
-    const width = 600 - margin.left - margin.right; 
-    const height = 300 - margin.top - margin.bottom; 
-    const data = [15, 33, 20, 90]; 
-      
-    const xScale = d3.scaleBand(). 
-    padding(0.2). 
-    domain(data). 
-    range([0, width]); 
-      
-    const yScale = d3.scaleLinear(). 
-    domain([0, 100]). 
-    range([height, 0]); 
-      
-    const svg = d3.select('#chart'). 
-    append('svg'). 
-    attr('width', width + margin.left + margin.right). 
-    attr('height', height + margin.top + margin.bottom). 
-    call(responsivefy) // Call responsivefy to make the chart responsive 
-        .append('g'). 
-    attr('transform', `translate(${margin.left}, ${margin.top})`); 
-      
-    svg.selectAll('rect'). 
-    data(data). 
-    enter(). 
-    append('rect'). 
-    attr('x', d => xScale(d)). 
-    attr('y', d => yScale(d)). 
-    attr('width', d => xScale.bandwidth()). 
-    attr('height', d => height - yScale(d)); 
-      
-    svg.append('g').call(d3.axisLeft(yScale)); 
-      
-    svg.append('g'). 
-    attr('transform', `translate(0, ${height})`). 
-    call(d3.axisBottom(xScale)); 
-
-    function responsivefy(svg) { 
-          
-        // Container is the DOM element, svg is appended. 
-        // Then we measure the container and find its 
-        // aspect ratio. 
-        const container = d3.select(svg.node().parentNode), 
-            width = parseInt(svg.style('width'), 10), 
-            height = parseInt(svg.style('height'), 10), 
-            aspect = width / height; 
-              
-        // Add viewBox attribute to set the value to initial size 
-        // add preserveAspectRatio attribute to specify how to scale  
-        // and call resize so that svg resizes on page load 
-        svg.attr('viewBox', `0 0 ${width} ${height}`). 
-        attr('preserveAspectRatio', 'xMinYMid'). 
-        call(resize); 
-          
-        d3.select(window).on('resize.' + container.attr('id'), resize); 
-
-        function resize() { 
-            const targetWidth = parseInt(container.style('width')); 
-            svg.attr('width', targetWidth); 
-            svg.attr('height', Math.round(targetWidth / aspect)); 
-        } 
-    } 
-</script> 
+  {% if table_body|length == 1 %}
+    <div id='layout'>
+      <!-- <h2>Bar chart example</h2> -->
+      <div id='container' style="align-items: center;">
+        <svg viewBox='0 0 750 500'/>
+      </div>
+      <script src="{{ url_for('.static',filename='main.js') }}"></script>
+    </div>
+  {% endif %}
 {% endblock %}
