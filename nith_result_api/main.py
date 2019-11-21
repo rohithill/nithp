@@ -23,7 +23,7 @@ def getcgpi(rollno):
     response = get_cgpi(rollno)
     return jsonify(response)
 
-def find_result(rollno,name,mincgpi,maxcgpi):
+def find_result(rollno='%',name='',mincgpi=0,maxcgpi=10):
     if not mincgpi:
         mincgpi = 0
     if not maxcgpi:
