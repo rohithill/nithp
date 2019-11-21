@@ -82,12 +82,10 @@ def search():
     mincgpi = request.args.get('mincgpi') or None
     maxcgpi = request.args.get('maxcgpi') or None
     print(mincgpi,maxcgpi,name,rollno,'here')
-    # print(request.values)
     import time
     st = time.perf_counter()
     response = api_result(rollno,name,mincgpi,maxcgpi)    
     et = time.perf_counter()
     print("Time taken to process query: ", et - st)
     # print(response)
-    # print(response.get('body'))
     return render_template('nith_result/search_result.html',table_head=response.get('head'),table_body=response.get('body'))
