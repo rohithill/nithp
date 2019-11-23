@@ -61,4 +61,4 @@ def about():
 
 if __name__ == '__main__':
     # print(app.url_map) # To print all paths
-    app.run()
+    app.run(debug=True)
