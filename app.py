@@ -57,6 +57,14 @@ def home():
 
 @app.route('/about/')
 def about():
+    import os
+    import multiprocessing
+    from pprint import pprint
+    pprint(os.getcwd())
+    pprint(os.environ)
+    pprint(multiprocessing.cpu_count())
+    pprint(os.cpu_count())
+    # pprint(os.path.)
     return "Hi! I'm SimpleX."
 
 if __name__ == '__main__':

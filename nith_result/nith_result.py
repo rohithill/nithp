@@ -37,11 +37,11 @@ def result_student():
 
 @result.route('/search')
 def search():
-    rollno = request.args.get('roll') or r'%'
+    rollno = request.args.get('roll')
     rollno = rollno.lower()
-    name = request.args.get('name') or r'%'
-    mincgpi = request.args.get('mincgpi') or None
-    maxcgpi = request.args.get('maxcgpi') or None
+    name = request.args.get('name')
+    mincgpi = request.args.get('mincgpi')
+    maxcgpi = request.args.get('maxcgpi')
 
     print(mincgpi,maxcgpi,name,rollno,'here')
     import time

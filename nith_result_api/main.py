@@ -48,12 +48,15 @@ def find_result(rollno=None,name=None,mincgpi=0,maxcgpi=10):
     'body':[]}
     conn = sqlite3.connect('nithResult.db')
     print('Created connnection: ',diff())
-    
+    # print(conn.execute('SELECT LENGTH('ROHIT');').fetchall())
+    # print('name',name,repr(name))
+    # print(conn.execute('''SELECT LENGTH(:name);''',{'name':name}).fetchall())
     result = conn.execute('SELECT rollno,name,father_name,cgpi FROM student NATURAL JOIN cgpi \
-    WHERE INSTR(LOWER(name),LOWER(TRIM((?)))) > 0 AND rollno LIKE (?) AND cgpi >= (?) AND cgpi <= (?) ORDER BY cgpi DESC',
-    (name,rollno,mincgpi,maxcgpi)).fetchall()
+    WHERE (INSTR(LOWER(name),LOWER(TRIM((:name)))) > 0 OR LENGTH(:name) = 0) AND rollno LIKE (:rollno) AND cgpi >= (:mincgpi) AND cgpi <= (:maxcgpi) ORDER BY cgpi DESC',
+    {'name':name,'rollno':rollno,'mincgpi':mincgpi,'maxcgpi':maxcgpi}).fetchall()
 
     # print('cur_result',result,name,rollno,mincgpi,maxcgpi)
+
     print('Got result',diff())
     response_array['body'] = result
     return response_array
