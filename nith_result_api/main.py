@@ -10,27 +10,36 @@ def home():
 @api.route('/search')
 def search():
     rollno = request.args.get('rollno')
-    return jsonify(find_result(rollno))
+    name = request.args.get('name')
+    mincgpi = request.args.get('mincgpi')
+    maxcgpi = request.args.get('maxcgpi')
 
-@api.route('/<string:rollno>/')
-@api.route('/<string:rollno>/<int:sem>')
+    return jsonify(find_result(rollno,name,mincgpi,maxcgpi))
+
+@api.route('/result/<string:rollno>/')
+@api.route('/result/<string:rollno>/<int:sem>')
 def getresult(rollno,sem=None):
     response = get_single_result(rollno,sem)
     return jsonify(response)
 
-@api.route('/cgpi/<string:rollno>')
-def getcgpi(rollno):
-    response = get_cgpi(rollno)
-    return jsonify(response)
+# @api.route('/cgpi/<string:rollno>')
+# def getcgpi(rollno):
+#     response = get_cgpi(rollno)
+#     return jsonify(response)
 
-def find_result(rollno='%',name='',mincgpi=0,maxcgpi=10):
+def find_result(rollno=None,name=None,mincgpi=0,maxcgpi=10):
+    if not rollno:
+        rollno = '%'
+    if not name:
+        name = ''
     if not mincgpi:
         mincgpi = 0
     if not maxcgpi:
         maxcgpi = 10
-    name = '%' + name + '%'
+
     mincgpi = float(mincgpi)
     maxcgpi = float(maxcgpi)
+
     import time
     st = time.perf_counter()
     diff = lambda: time.perf_counter() - st
@@ -39,10 +48,9 @@ def find_result(rollno='%',name='',mincgpi=0,maxcgpi=10):
     'body':[]}
     conn = sqlite3.connect('nithResult.db')
     print('Created connnection: ',diff())
-    # print(type(mincgpi),mincgpi,maxcgpi)
     
     result = conn.execute('SELECT rollno,name,father_name,cgpi FROM student NATURAL JOIN cgpi \
-    WHERE name LIKE (?) AND rollno LIKE (?) AND cgpi >= (?) AND cgpi <= (?) ORDER BY cgpi DESC',
+    WHERE INSTR(LOWER(name),LOWER(TRIM((?)))) > 0 AND rollno LIKE (?) AND cgpi >= (?) AND cgpi <= (?) ORDER BY cgpi DESC',
     (name,rollno,mincgpi,maxcgpi)).fetchall()
 
     # print('cur_result',result,name,rollno,mincgpi,maxcgpi)
@@ -77,11 +85,11 @@ def get_single_result(rollno,sem=None):
     response['body'] = result
     return response
 
-def get_cgpi(rollno):
-    rollno = rollno.lower()
-    conn = sqlite3.connect('nithResult.db')
-    result = conn.execute('SELECT cgpi FROM cgpi WHERE rollno=(?)',(rollno,))
-    cgpi = result.fetchone()
-    if cgpi:
-        cgpi = cgpi[0]
-    return cgpi
+# def get_cgpi(rollno):
+#     rollno = rollno.lower()
+#     conn = sqlite3.connect('nithResult.db')
+#     result = conn.execute('SELECT cgpi FROM cgpi WHERE rollno=(?)',(rollno,))
+#     cgpi = result.fetchone()
+#     if cgpi:
+#         cgpi = cgpi[0]
+#     return cgpi

@@ -20,7 +20,7 @@
     </thead>
     <tbody>
       <tr>
-        <td>Search</a></td>
+        <td>search</a></td>
         <td>Get student CGPI and Father's Name using this method &nbsp;&nbsp; For e.g. https://nithp.herokuapp.com/api/search?rollno=17mi526 <br>OR &nbsp;&nbsp;&nbsp;/search?rollno=17mi5% (Get the result of all the student who are studying in CSE-DD) </td>
       </tr>
     </tbody>
@@ -32,7 +32,7 @@
     </thead>
     <tbody>
       <tr>
-        <td>Rollno</a></td>
+        <td>result/{rollno}</a></td>
         <td>Get student full detail using Rollno All semesters result (with pointer in each individual subject) &nbsp;&nbsp; For e.g. https://nithp.herokuapp.com/api/17mi526</td>
       </tr>
     </tbody>
@@ -44,20 +44,8 @@
     </thead>
     <tbody>
       <tr>
-        <td>Rollno/Semester</a></td>
-        <td>Same as above but get all details of one particular semeste &nbsp;&nbsp; For e.g. https://nithp.herokuapp.com/api/17mi526/3</td>
-      </tr>
-    </tbody>
-    <thead>
-      <tr>
-        <th scope="col">Method</th>
-        <th scope="col">Description</th>      
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>CGPI/rollno</a></td>
-        <td>Return CGPI of student &nbsp;&nbsp; For e.g. https://nithp.herokuapp.com/api/cgpi/17mi526</td>
+        <td>result/{Rollno}/{Semester}</a></td>
+        <td>Similar to above method, but returns result of a single semester only. If semester is invalid then body is empty.  &nbsp;&nbsp; For e.g. https://nithp.herokuapp.com/api/17mi526/3</td>
       </tr>
     </tbody>
   </table>
