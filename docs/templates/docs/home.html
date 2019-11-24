@@ -4,13 +4,52 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <title>Documentation</title>
 </head>
 <body>
-  <h1>Welcome to the Documentation</h1>
-  API is available at https://nithp.herokuapp.com/api/ <br>
-
-  Here is a list of api endpoints: 
+  <center><h1>Welcome to the Documentation</h1></center> <br>
+  <center> <h2 >API Link: <a href="https://nithp.herokuapp.com/api/" target="blank" style="text-decoration: none;">Click Here</a></h2></center>  
+  <br>
+  <table class="table table-striped" id="showResult" style="margin-left: 5%;">
+    <thead>
+      <tr>
+        <th scope="col">Method</th>
+        <th scope="col">Description</th>      
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>search</a></td>
+        <td>Get student CGPI and Father's Name using this method &nbsp;&nbsp; For e.g. https://nithp.herokuapp.com/api/search?rollno=17mi526 <br>OR &nbsp;&nbsp;&nbsp;/search?rollno=17mi5% (Get the result of all the student who are studying in CSE-DD) </td>
+      </tr>
+    </tbody>
+    <thead>
+      <tr>
+        <th scope="col">Method</th>
+        <th scope="col">Description</th>      
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>result/{rollno}</a></td>
+        <td>Get student full detail using Rollno All semesters result (with pointer in each individual subject) &nbsp;&nbsp; For e.g. https://nithp.herokuapp.com/api/17mi526</td>
+      </tr>
+    </tbody>
+    <thead>
+      <tr>
+        <th scope="col">Method</th>
+        <th scope="col">Description</th>      
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>result/{Rollno}/{Semester}</a></td>
+        <td>Similar to above method, but returns result of a single semester only. If semester is invalid then body is empty.  &nbsp;&nbsp; For e.g. https://nithp.herokuapp.com/api/17mi526/3</td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- Here is a list of api endpoints: 
   <p>
     method: search?rollno={rollnumber} <br>
     return value: JSON of a table with two keys head and body. <br>
@@ -40,6 +79,6 @@
     method: cgpi/{rollnumber} <br>
     return value: A float. <br>
     If rollnumber is invalid, returns a null value <br>
-  </p>
+  </p> -->
 </body>
 </html>
