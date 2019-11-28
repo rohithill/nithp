@@ -1,6 +1,7 @@
 from flask import Flask, Blueprint, render_template, redirect, request, url_for, jsonify
 from nith_result_api import find_result as api_result,get_single_result
 import json
+from cache import cache
 
 result = Blueprint('result',__name__,template_folder='templates',static_folder='static')
 
@@ -22,7 +23,7 @@ def home():
 @result.route('/student')
 def result_student():
     rollno = request.args.get('rollno')
-    print(request.args,request.values)
+    # print(request.args,request.values)
     result = get_single_result(rollno)
 
     # Add grade column as it's not returned by get_single_result
@@ -36,6 +37,7 @@ def result_student():
     return render_template('nith_result/result_student.html',table=result)
 
 @result.route('/search')
+@cache.cached(timeout=600,query_string=True)
 def search():
     rollno = request.args.get('roll')
     rollno = rollno.lower()
@@ -43,7 +45,7 @@ def search():
     mincgpi = request.args.get('mincgpi')
     maxcgpi = request.args.get('maxcgpi')
 
-    print(mincgpi,maxcgpi,name,rollno,'here')
+    # print(mincgpi,maxcgpi,name,rollno,'here')
     import time
     st = time.perf_counter()
     response = api_result(rollno,name,mincgpi,maxcgpi)    

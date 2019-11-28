@@ -52,7 +52,7 @@ def find_result(rollno=None,name=None,mincgpi=0,maxcgpi=10):
     # print('name',name,repr(name))
     # print(conn.execute('''SELECT LENGTH(:name);''',{'name':name}).fetchall())
     result = conn.execute('SELECT rollno,name,father_name,cgpi FROM student NATURAL JOIN cgpi \
-    WHERE (INSTR(LOWER(name),LOWER(TRIM((:name)))) > 0 OR LENGTH(:name) = 0) AND rollno LIKE (:rollno) AND cgpi >= (:mincgpi) AND cgpi <= (:maxcgpi) ORDER BY cgpi DESC',
+    WHERE (INSTR(LOWER(name),LOWER(TRIM((:name)))) > 0 OR LENGTH(:name) = 0) AND rollno LIKE (:rollno) AND cgpi >= (:mincgpi) AND cgpi <= (:maxcgpi)',
     {'name':name,'rollno':rollno,'mincgpi':mincgpi,'maxcgpi':maxcgpi}).fetchall()
 
     # print('cur_result',result,name,rollno,mincgpi,maxcgpi)
