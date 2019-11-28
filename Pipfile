@@ -14,6 +14,7 @@ jinja2 = "==2.10.1"
 markupsafe = "==1.1.1"
 werkzeug = "==0.15.5"
 sphinx = "*"
+flask-caching = "*"
 
 [requires]
 python_version = "3.7"
