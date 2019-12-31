@@ -5,7 +5,7 @@ from docs.main import docs
 from cache import cache
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'you-will-never-guess'
+app.config['SECRET_KEY'] = 'you-will    -never-guess'
 
 cache.init_app(app)
 # app.config['EXPLAIN_TEMPLATE_LOADING'] = True
