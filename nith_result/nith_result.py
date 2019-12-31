@@ -39,6 +39,10 @@ def result_student():
 @result.route('/search')
 @cache.cached(timeout=600,query_string=True)
 def search():
+    # import time
+    # print('Sleeping')
+    # time.sleep(10)
+    # print("Waked")
     rollno = request.args.get('roll')
     rollno = rollno.lower()
     name = request.args.get('name')

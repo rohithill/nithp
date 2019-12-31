@@ -46,7 +46,7 @@ def find_result(rollno=None,name=None,mincgpi=0,maxcgpi=10):
     response_array = {
     'head':('rollno','name','fname','cgpi'),
     'body':[]}
-    conn = sqlite3.connect('nithResult.db')
+    conn = sqlite3.connect('file:nithResult.db?mode=ro',uri=True)
     print('Created connnection: ',diff())
     # print(conn.execute('SELECT LENGTH('ROHIT');').fetchall())
     # print('name',name,repr(name))
