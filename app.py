@@ -5,7 +5,7 @@ from docs.main import docs
 from cache import cache
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'you-will    -never-guess'
+app.config['SECRET_KEY'] = 'you-will-never-guess'
 
 cache.init_app(app)
 # app.config['EXPLAIN_TEMPLATE_LOADING'] = True
@@ -16,7 +16,7 @@ app.register_blueprint(docs,url_prefix='/docs/')
 
 # https://kb.sites.apiit.edu.my/knowledge-base/how-to-gzip-response-in-flask/
 
-import gzip, functools
+import gzip, functools  
 from io import BytesIO as IO
 from flask import after_this_request, request
 
