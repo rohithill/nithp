@@ -69,13 +69,13 @@ def get_single_result(rollno,sem=None):
     response = {
         'rollno':rollno,
         'name':None,
-        'fname': None,
         'head':None,
         'body':None
     }
-    query_result = conn.execute('Select name, father_name from student where rollno=(?)',(rollno,)).fetchone()
+    query_result = conn.execute('Select name from student where rollno=(?)',(rollno,)).fetchone()
     if query_result:
-        response['name'],response['fname'] = query_result
+
+        response['name'] = query_result
     if not sem:
         #If semester is not specified or sem==0, return result of all semesters
         cur = conn.execute('SELECT semester, code, title, credits, grade/credits as pointer \
@@ -87,12 +87,3 @@ def get_single_result(rollno,sem=None):
     response['head'] = ('sem.','code','title','credits','pointer')
     response['body'] = result
     return response
-
-# def get_cgpi(rollno):
-#     rollno = rollno.lower()
-#     conn = sqlite3.connect('nithResult.db')
-#     result = conn.execute('SELECT cgpi FROM cgpi WHERE rollno=(?)',(rollno,))
-#     cgpi = result.fetchone()
-#     if cgpi:
-#         cgpi = cgpi[0]
-#     return cgpi
