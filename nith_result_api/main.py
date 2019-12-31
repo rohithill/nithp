@@ -74,8 +74,8 @@ def get_single_result(rollno,sem=None):
     }
     query_result = conn.execute('Select name from student where rollno=(?)',(rollno,)).fetchone()
     if query_result:
-
-        response['name'] = query_result
+        response['name'] = query_result[0]
+        # print(query_result,dir(query_result))
     if not sem:
         #If semester is not specified or sem==0, return result of all semesters
         cur = conn.execute('SELECT semester, code, title, credits, grade/credits as pointer \
