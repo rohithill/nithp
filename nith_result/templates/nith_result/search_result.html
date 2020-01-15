@@ -3,6 +3,7 @@
 <table class="table table-striped" id="showResult" style="margin-left:auto;margin-right:auto;max-width: 700px;">
   <thead>
     <tr>
+      <th scope="col">Rank <i class="fa fa-sort"></i></th>
       {% for cell in table_head %}
       <th scope="col">{{ cell|title }}&nbsp<i class="fa fa-sort"></i></th>      
       {% endfor %}
@@ -11,6 +12,7 @@
   <tbody>
     {% for result in table_body %}
     <tr>
+      <td>{{ loop.index }}</td>
       {% for cell in result %}
       {% if loop.first %}
       <td><a href="{{ url_for('.result_student',rollno=cell) }}">{{ cell }}</a></td>
