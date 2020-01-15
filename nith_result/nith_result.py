@@ -36,13 +36,10 @@ def result_student():
     
     return render_template('nith_result/result_student.html',table=result)
 
+import operator
 @result.route('/search')
 @cache.cached(timeout=600,query_string=True)
 def search():
-    # import time
-    # print('Sleeping')
-    # time.sleep(10)
-    # print("Waked")
     rollno = request.args.get('roll')
     rollno = rollno.lower()
     name = request.args.get('name')
@@ -56,5 +53,9 @@ def search():
     et = time.perf_counter()
     print("Time taken to process query: ", et - st)
     # print(response)
+    table_head = response.get('head')
+    table_body = response.get('body')
 
-    return render_template('nith_result/search_result.html',table_head=response.get('head'),table_body=response.get('body'))
+    table_body.sort(key=operator.itemgetter(table_head.index('cgpi')),reverse=True)
+
+    return render_template('nith_result/search_result.html',table_head=table_head,table_body=table_body)
