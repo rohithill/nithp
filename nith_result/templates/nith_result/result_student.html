@@ -17,11 +17,11 @@
         </tr>
       </tbody>
     </table>
-    <table class="table">
+    <table class="table bs-select table-striped">
       <thead>
         <tr>
           {% for cell in table.get('summary_head') %}
-          <td>{{ cell }}</td>
+          <th scope="col">{{ cell|title }}</th>
           {% endfor %}
         </tr>
       </thead>
