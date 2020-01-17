@@ -17,6 +17,24 @@
         </tr>
       </tbody>
     </table>
+    <table class="table">
+      <thead>
+        <tr>
+          {% for cell in table.get('summary_head') %}
+          <td>{{ cell }}</td>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in table.get('summary_body') %}
+        <tr>
+          {% for cell in row %}
+          <td>{{ cell }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   <!-- </div> -->
   <table id="showResult" class="table bs-select table-striped" id="{{ rollno }}">
     <thead>

@@ -70,7 +70,9 @@ def get_single_result(rollno,sem=None):
         'rollno':rollno,
         'name':None,
         'head':None,
-        'body':None
+        'body':None,
+        'summary_head': None,
+        'summary_body': None
     }
     query_result = conn.execute('Select name from student where rollno=(?)',(rollno,)).fetchone()
     if query_result:
@@ -80,10 +82,19 @@ def get_single_result(rollno,sem=None):
         #If semester is not specified or sem==0, return result of all semesters
         cur = conn.execute('SELECT semester, code, title, credits, grade/credits as pointer \
             FROM result NATURAL JOIN course WHERE rollno=(?) ORDER BY semester ASC',(rollno,))
+        cur2 = conn.execute('SELECT semester,sgpi,cgpi FROM summary where rollno=(?)',(rollno,))
     else:
         cur = conn.execute('SELECT semester, code, title, credits, grade/credits as pointer \
             FROM result NATURAL JOIN course WHERE rollno=(?) and semester=(?) ORDER BY semester ASC',(rollno,sem))
+        cur2 = conn.execute('SELECT semester,sgpi,cgpi FROM summary \
+            where rollno=(?) and semester=(?)',(rollno,sem))
+        
     result = cur.fetchall()
-    response['head'] = ('sem.','code','title','credits','pointer')
+    response['head'] = ('sem','code','title','credits','pointer')
     response['body'] = result
+
+    result = cur2.fetchall()
+    response['summary_head'] = ('sem','sgpi','cgpi')
+    response['summary_body'] = result
+
     return response

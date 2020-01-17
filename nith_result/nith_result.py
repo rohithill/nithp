@@ -33,8 +33,8 @@ def result_student():
     for row in range(len(result['body'])):
         result['body'][row] = (*result['body'][row],
         pointer_to_grade[result['body'][row][result['head'].index('pointer')]])
-    
-    return render_template('nith_result/result_student.html',table=result)
+    table_summary = {'body' : [(1,8,8)]}
+    return render_template('nith_result/result_student.html',table=result,table_summary=table_summary)
 
 import operator
 @result.route('/search')
