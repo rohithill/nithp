@@ -1,7 +1,10 @@
 from flask import Blueprint, jsonify, request
+from flask_cors import CORS
 import sqlite3
 
 api = Blueprint('api',__name__)
+
+CORS(api)
 
 @api.route('/')
 def home():

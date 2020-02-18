@@ -15,6 +15,7 @@ markupsafe = "==1.1.1"
 werkzeug = "==0.15.5"
 sphinx = "*"
 flask-caching = "*"
+flask-cors = "*"
 
 [requires]
 python_version = "3.7"
