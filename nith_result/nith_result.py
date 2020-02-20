@@ -11,6 +11,7 @@ pointer_to_grade = {
     8 : 'B',
     7 : 'BC',
     6 : 'C',
+    5 : 'CD', #rollno 17635
     4 : 'D',
     0 : 'F'
 }
