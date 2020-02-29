@@ -3,10 +3,15 @@ from nith_result.nith_result import result
 from nith_result_api.main import api
 from docs.main import docs
 from cache import cache
+from flask_cors import CORS
+import connexion
 
-app = Flask(__name__)
+connexionApp = connexion.App(__name__)
+app = connexionApp.app
+
 app.config['SECRET_KEY'] = 'you-will-never-guess'
 
+CORS(app)
 cache.init_app(app)
 # app.config['EXPLAIN_TEMPLATE_LOADING'] = True
 
@@ -14,6 +19,7 @@ app.register_blueprint(result,url_prefix='/result/')
 app.register_blueprint(api,url_prefix='/api/')
 app.register_blueprint(docs,url_prefix='/docs/')
 
+connexionApp.add_api('nith_result_api/swagger.yml')
 # https://kb.sites.apiit.edu.my/knowledge-base/how-to-gzip-response-in-flask/
 
 import gzip, functools  

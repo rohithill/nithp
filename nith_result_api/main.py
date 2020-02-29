@@ -4,7 +4,7 @@ import sqlite3
 
 api = Blueprint('api',__name__)
 
-CORS(api)
+# CORS(api)
 
 @api.route('/')
 def home():
@@ -25,10 +25,39 @@ def getresult(rollno,sem=None):
     response = get_single_result(rollno,sem)
     return jsonify(response)
 
-# @api.route('/cgpi/<string:rollno>')
-# def getcgpi(rollno):
-#     response = get_cgpi(rollno)
-#     return jsonify(response)
+results = {}
+import os, json
+def init():
+    for root, subFolder, files in os.walk('result'):
+        for item in files:
+            if item.endswith(".json") :
+                fileNamePath = str(os.path.join(root,item))
+                with open(fileNamePath,'r') as f:
+                    data = json.loads(f.read())
+                    for r in data:
+                        results[r['roll']] = r
+
+init()   
+
+def read_all():
+    response = []
+    for roll in results:
+        r = results[roll]
+        # print(r,type(r))
+        temp = {
+            "name": r["name"],
+            "roll": r["roll"],
+            "cgpi": r["cgpi"],
+            "sgpi": r["sgpi"],
+            "link": ('api/result/student/'+r["roll"])
+        }
+        response.append(temp)
+    return response
+
+def read(roll):
+    if roll not in results:
+        return "not found",404
+    return results[roll]
 
 def find_result(rollno=None,name=None,mincgpi=0,maxcgpi=10):
     if not rollno:

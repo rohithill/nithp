@@ -1,0 +1,61 @@
+swagger: "2.0"
+info:
+  description: This is the swagger file that goes with our server code
+  version: "1.0.0"
+  title: Swagger ReST Article
+consumes:
+  - application/json
+produces:
+  - application/json
+
+basePath: /api/result
+
+# Paths supported by the server application
+paths:
+  /students:
+    get:
+      operationId: nith_result_api.read_all
+      tags:
+        - Student
+      summary: Read the entire list of student
+      description: Read the list of student
+      responses:  
+        200:
+          description: Successfully read people list operation
+          schema:
+            type: array
+            items:
+              properties:
+                name:
+                  type: string
+                roll:
+                  type: string
+                cgpi:
+                  type: string
+                sgpi:
+                  type: string
+                link:
+                  type: string
+  
+  /student/{roll}:
+    get:
+      operationId: nith_result_api.read
+      tags:
+        - Student
+      summary: Read one person from the people list
+      description: Read one person from the people list
+      parameters:
+        - name: roll
+          in: path
+          description: Roll number of student whose result is to get
+          type: string
+          required: True
+      responses:
+        200:
+          description: Successfully read person from people list operation
+          schema:
+            properties:
+              roll:
+                type: string
+              name:
+                type: string
