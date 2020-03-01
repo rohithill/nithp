@@ -68,7 +68,7 @@ import time
 # @cache.cached(timeout=5,query_string=True)
 
 def query_db(query, args=tuple(), one=False,limit=0):
-    conn = sqlite3.Connection('file:nithResult.db?mode=ro',uri=True)
+    conn = sqlite3.Connection('file:nithResultnew.db?mode=ro',uri=True)
     conn.row_factory = sqlite3.Row
     cur = conn.execute(query, args)
     rv = cur.fetchmany(limit)
