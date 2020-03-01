@@ -12,7 +12,7 @@ basePath: /api/experimental/result
 
 # Paths supported by the server application
 paths:
-  /students:
+  /student:
     get:
       operationId: nith_result_api.read_all
       tags:
@@ -69,11 +69,35 @@ definitions:
       branch:
         type: string
       cgpi:
-        type: string
+        type: number
+        format: float
       sgpi:
-        type: string
+        type: number
+        format: float
       rank:
         type: object
+        properties:
+          college:
+            type: object
+            properties:
+              cgpi:
+                type: string
+              sgpi:
+                type: string
+          year:
+            type: object
+            properties:
+              cgpi:
+                type: string
+              sgpi:
+                type: string
+          class:
+            type: object
+            properties:
+              cgpi:
+                type: string
+              sgpi:
+                type: string
       result:
         type: array
         items:
@@ -84,11 +108,11 @@ definitions:
           properties:
             cgpi:
               type: string
-            cgpi total:
+            cgpi_total:
               type: string
             sgpi:
               type: string
-            sgpi total:
+            sgpi_total:
               type: string
             sem:
               type: string 
@@ -97,13 +121,13 @@ definitions:
     properties:
       grade:
         type: string
-      sub gp:
+      sub_gp:
         type: string
-      sub point:
+      sub_point:
         type: string
       subject:
         type: string
-      subject code:
+      subject_code:
         type: string
       sem:
         type: string

@@ -63,29 +63,124 @@ def init():
                             temp_list.append(temp_dict)  
                         r['summary'] = temp_list
 init()   
+import time
+# from cache import cache
+# @cache.cached(timeout=5,query_string=True)
+
+def query_db(query, args=tuple(), one=False,limit=0):
+    conn = sqlite3.Connection('file:nithResult.db?mode=ro',uri=True)
+    conn.row_factory = sqlite3.Row
+    cur = conn.execute(query, args)
+    rv = cur.fetchmany(limit)
+    conn.close()
+    
+    return (rv[0] if rv else None) if one else rv
 
 def read_all():
+    st = time.time()
+    # print(locals(), len(globals()),globals().keys(),request.path,request.endpoint)
+    
+
+    # cur.execute('''SELECT * from student''')
+    # result = cur.fetchmany(200)
+    result = query_db('SELECT * from student')
+    # print(result.keys())
     response = []
-    for roll in results:
-        r = results[roll]
-        # print(r,type(r))
-        temp = {
-            "name": r["name"],
-            "roll": r["roll"],
-            "cgpi": r["cgpi"],
-            "sgpi": r["sgpi"],
-            "branch": r["branch"],
-            "link": ('api/result/student/'+r["roll"])
-        }
-        # if len(response) < 200:
-        response.append(temp)
-            # break
+    for row in result:
+        # print(row.keys())
+        response.append({
+            'name': row['name'],
+            'roll': row['roll'],
+            'branch': row['branch'],
+            'cgpi': row['cgpi'],
+            'sgpi': row['sgpi'],
+            'rank': {
+                'college': {
+                    'cgpi': row['rank_college_cgpi'],
+                    'sgpi': row['rank_college_sgpi']
+                },
+                'year': {
+                    'cgpi': row['rank_year_cgpi'],
+                    'sgpi': row['rank_year_sgpi']
+                },
+                'class': {
+                    'cgpi': row['rank_class_cgpi'],
+                    'sgpi': row['rank_class_sgpi']
+                }
+            },
+            "link" : request.path + '/'  + row['roll']
+        })
+
+    print(f"Total time elapsed read_all = {time.time() - st}")
     return response
 
 def read(roll):
-    if roll not in results:
-        return "not found",404
-    return results[roll]
+    st = time.time()
+    data = {
+        "branch": None,
+        "cgpi": None,
+        "name": None,
+        "rank": {
+            "class": {
+            "cgpi": None,
+            "sgpi": None
+            },
+            "college": {
+            "cgpi": None,
+            "sgpi": None
+            },
+            "year": {
+            "cgpi": None,
+            "sgpi": None
+            }
+        },
+        "result": [],
+        "roll": None,
+        "sgpi": None,
+        "summary": []
+    }
+    result = query_db('''SELECT roll,
+        name,
+        branch,
+        cgpi,
+        sgpi,
+        rank_college_cgpi,
+        rank_college_sgpi,
+        rank_year_cgpi,
+        rank_year_sgpi,
+        rank_class_cgpi,
+        rank_class_sgpi
+        FROM student where roll=(?)''',(roll,),one=True,limit=1)
+    # result = cur.fetchone()
+
+    if not result:
+        return {"status": "not found"},404
+
+    for key in result.keys():
+        if key.startswith('rank'):
+            new_key = key.split('_')
+            data[new_key[0]][new_key[1]][new_key[2]] = result[key]
+        else:
+            data[key] = result[key]
+
+    result = query_db('''SELECT 
+        grade,
+        sem,
+        sub_gp,
+        sub_point,
+        subject,
+        subject_code 
+        FROM result where roll=(?)''',(roll,))
+
+    for row in result:
+        data['result'].append({i:row[i] for i in row.keys()})
+    
+    result = query_db('''SELECT sem,cgpi,sgpi,cgpi_total,sgpi_total from summary where roll=(?)''',(roll,))
+    data['summary'] = [{i:row[i] for i in row.keys()} for row in result]
+
+    print(f"Total time elapsed read(roll) = {time.time() - st}")
+
+    return data
 
 def find_result(rollno=None,name=None,mincgpi=0,maxcgpi=10):
     if not rollno:
