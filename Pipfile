@@ -16,6 +16,7 @@ werkzeug = "==0.15.5"
 sphinx = "*"
 flask-caching = "*"
 flask-cors = "*"
+connexion = {extras = ["swagger-ui"],version = "*"}
 
 [requires]
 python_version = "3.7"
