@@ -1,8 +1,8 @@
 swagger: "2.0"
 info:
-  description: This is the swagger file that goes with our server code
-  version: "1.0.0"
-  title: Swagger ReST Article
+  description: This API provides access to result. Do not use this api yet.
+  version: "0.1.0"
+  title: NITH Result API (Experimental)
 consumes:
   - application/json
 produces:
@@ -30,6 +30,8 @@ paths:
                   type: string
                 roll:
                   type: string
+                branch:
+                  type: string
                 cgpi:
                   type: string
                 sgpi:
@@ -54,8 +56,54 @@ paths:
         200:
           description: Successfully read person from people list operation
           schema:
-            properties:
-              roll:
-                type: string
-              name:
-                type: string
+            $ref: '#/definitions/Student'
+
+definitions:
+  Student:
+    type: object
+    properties:
+      name:
+        type: string
+      roll:
+        type: string
+      branch:
+        type: string
+      cgpi:
+        type: string
+      sgpi:
+        type: string
+      rank:
+        type: object
+      result:
+        type: array
+        items:
+          $ref: '#/definitions/Subject'
+      summary:
+        type: array
+        items:
+          properties:
+            cgpi:
+              type: string
+            cgpi total:
+              type: string
+            sgpi:
+              type: string
+            sgpi total:
+              type: string
+            sem:
+              type: string 
+  Subject:
+    type: object
+    properties:
+      grade:
+        type: string
+      sub gp:
+        type: string
+      sub point:
+        type: string
+      subject:
+        type: string
+      subject code:
+        type: string
+      sem:
+        type: string

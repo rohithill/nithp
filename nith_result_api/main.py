@@ -36,7 +36,32 @@ def init():
                     data = json.loads(f.read())
                     for r in data:
                         results[r['roll']] = r
+                        
+                        # perform modification
+                        
+                        temp_list = []
+                        for sem in r['result']:
+                            if sem == 'head':
+                                continue
+                            for sub in r['result'][sem]:
+                                temp_dict = {}
+                                for i,j in zip(r['result']['head'],sub):
+                                    temp_dict[i.lower()] = j
+                                temp_dict['sem'] = str(int(sem[1:]))
+                                temp_list.append(temp_dict)
+                        r['result'] = temp_list
 
+                        # change summary
+                        temp_list = []
+                        for sem in r['summary']:
+                            if sem == 'head':       
+                                continue
+                            temp_dict = {}
+                            for i,j in zip(r['summary']['head'],r['summary'][sem]):
+                                temp_dict[i.lower()] = j
+                            temp_dict['sem'] = str(int(sem[1:]))
+                            temp_list.append(temp_dict)  
+                        r['summary'] = temp_list
 init()   
 
 def read_all():
@@ -49,9 +74,12 @@ def read_all():
             "roll": r["roll"],
             "cgpi": r["cgpi"],
             "sgpi": r["sgpi"],
+            "branch": r["branch"],
             "link": ('api/result/student/'+r["roll"])
         }
+        # if len(response) < 200:
         response.append(temp)
+            # break
     return response
 
 def read(roll):
