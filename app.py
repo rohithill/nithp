@@ -33,7 +33,9 @@ def home():
 @app.route('/about/')
 def about():
     return "Hi! I'm SimpleX."
+    
 if __name__ == '__main__':
     # print(app.url_map) # To print all paths
+    # print(connexionApp.app.url_map)
     app.run(debug=True)
     

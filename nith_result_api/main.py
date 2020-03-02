@@ -1,10 +1,13 @@
 from flask import Blueprint, jsonify, request
+import connexion
 from flask_cors import CORS
+
 import sqlite3
+import time
 
 api = Blueprint('api',__name__)
 
-# CORS(api)
+# # CORS(api)
 
 @api.route('/')
 def home():
@@ -25,192 +28,6 @@ def getresult(rollno,sem=None):
     response = get_single_result(rollno,sem)
     return jsonify(response)
 
-results = {}
-import os, json
-def init():
-    for root, subFolder, files in os.walk('result'):
-        for item in files:
-            if item.endswith(".json") :
-                fileNamePath = str(os.path.join(root,item))
-                with open(fileNamePath,'r') as f:
-                    data = json.loads(f.read())
-                    for r in data:
-                        results[r['roll']] = r
-                        
-                        # perform modification
-                        
-                        temp_list = []
-                        for sem in r['result']:
-                            if sem == 'head':
-                                continue
-                            for sub in r['result'][sem]:
-                                temp_dict = {}
-                                for i,j in zip(r['result']['head'],sub):
-                                    temp_dict[i.lower()] = j
-                                temp_dict['sem'] = str(int(sem[1:]))
-                                temp_list.append(temp_dict)
-                        r['result'] = temp_list
-
-                        # change summary
-                        temp_list = []
-                        for sem in r['summary']:
-                            if sem == 'head':       
-                                continue
-                            temp_dict = {}
-                            for i,j in zip(r['summary']['head'],r['summary'][sem]):
-                                temp_dict[i.lower()] = j
-                            temp_dict['sem'] = str(int(sem[1:]))
-                            temp_list.append(temp_dict)  
-                        r['summary'] = temp_list
-init()   
-import time
-# from cache import cache
-# @cache.cached(timeout=5,query_string=True)
-
-def query_db(query, args=tuple(), one=False,limit=0):
-    conn = sqlite3.Connection('file:nithResultnew.db?mode=ro',uri=True)
-    conn.row_factory = sqlite3.Row
-    cur = conn.execute(query, args)
-    rv = cur.fetchmany(limit)
-    conn.close()
-    
-    return (rv[0] if rv else None) if one else rv
-
-import connexion
-def read_all():
-    name = connexion.request.args.get('name') or ''
-    branch = connexion.request.args.get('branch')
-    roll = connexion.request.args.get('roll') or '%'
-    subject_code = connexion.request.args.get('subject_code') or '%'
-
-    # sub_code = connexion.args.get('subject_code')
-    print(name,branch,roll)
-    print(connexion.request.args)
-    st = time.time()
-    # print(locals(), len(globals()),globals().keys(),request.path,request.endpoint)
-    data = {
-        'name': name,
-        'branch' : branch,
-        'roll': roll,
-        'subject_code': subject_code
-    }
-
-    if branch:
-        result = query_db('SELECT * from student  WHERE (INSTR(LOWER(name),LOWER(TRIM((:name)))) > 0 OR LENGTH(:name) = 0) and roll like (:roll) AND LOWER(branch)=LOWER(:branch) AND roll IN (Select roll from result where subject_code like (:subject_code))',data)
-    else:
-        result = query_db('SELECT * from student  WHERE (INSTR(LOWER(name),LOWER(TRIM((:name)))) > 0  OR LENGTH(:name) = 0) and roll like (:roll)  AND roll IN (Select roll from result where subject_code like (:subject_code))',data)
- 
-    response = []
-    for row in result:
-        response.append({
-            'name': row['name'],
-            'roll': row['roll'],
-            'branch': row['branch'],
-            'cgpi': row['cgpi'],
-            'sgpi': row['sgpi'],
-            'rank': {
-                'college': {
-                    'cgpi': row['rank_college_cgpi'],
-                    'sgpi': row['rank_college_sgpi']
-                },
-                'year': {
-                    'cgpi': row['rank_year_cgpi'],
-                    'sgpi': row['rank_year_sgpi']
-                },
-                'class': {
-                    'cgpi': row['rank_class_cgpi'],
-                    'sgpi': row['rank_class_sgpi']
-                }
-            },
-            "link" : request.path + '/'  + row['roll']
-        })
-
-    print(f"Total time elapsed read_all = {time.time() - st}")
-    return {
-        "data":response,
-        'pagination': {}
-        }
-
-def read(roll):
-    st = time.time()
-    data = {
-        "branch": None,
-        "cgpi": None,
-        "name": None,
-        "rank": {
-            "class": {
-            "cgpi": None,
-            "sgpi": None
-            },
-            "college": {
-            "cgpi": None,
-            "sgpi": None
-            },
-            "year": {
-            "cgpi": None,
-            "sgpi": None
-            }
-        },
-        "result": [],
-        "roll": None,
-        "sgpi": None,
-        "summary": []
-    }
-    result = query_db('''SELECT roll,
-        name,
-        branch,
-        cgpi,
-        sgpi,
-        rank_college_cgpi,
-        rank_college_sgpi,
-        rank_year_cgpi,
-        rank_year_sgpi,
-        rank_class_cgpi,
-        rank_class_sgpi
-        FROM student where roll=(?)''',(roll,),one=True,limit=1)
-    # result = cur.fetchone()
-
-    if not result:
-        return {"status": "not found"},404
-
-    for key in result.keys():
-        if key.startswith('rank'):
-            new_key = key.split('_')
-            data[new_key[0]][new_key[1]][new_key[2]] = result[key]
-        else:
-            data[key] = result[key]
-
-    result = query_db('''SELECT 
-        grade,
-        sem,
-        sub_gp,
-        sub_point,
-        subject,
-        subject_code 
-        FROM result where roll=(?)''',(roll,))
-
-    for row in result:
-        data['result'].append({i:row[i] for i in row.keys()})
-    
-    result = query_db('''SELECT sem,cgpi,sgpi,cgpi_total,sgpi_total from summary where roll=(?)''',(roll,))
-    data['summary'] = [{i:row[i] for i in row.keys()} for row in result]
-
-    print(f"Total time elapsed read(roll) = {time.time() - st}")
-
-    return data
-
-subject_list = []
-def read_subjects():
-    if subject_list:
-        return subject_list
-    
-    result = query_db("SELECT distinct subject_code,subject,sub_point from result")
-    for row in result:
-        subject_list.append({
-            i:row[i] for i in row.keys()
-        })
-    # print(subject_list)
-    return subject_list
 
 def find_result(rollno=None,name=None,mincgpi=0,maxcgpi=10):
     if not rollno:

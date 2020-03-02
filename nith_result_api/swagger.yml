@@ -1,12 +1,14 @@
 swagger: "2.0"
 info:
-  description: This API provides access to result. Do not use this api yet.
-  version: "0.1.0"
-  title: NITH Result API (Experimental)
+  description: This API provides access to NIT Hamirpur result. Contributions are welcome.
+  version: "0.2.0"
+  title: NITH Result API (Beta)
 produces:
   - application/json
+consumes:
+  - application/json
 
-basePath: /api/experimental/result
+basePath: /api/result
 
 # Paths supported by the server application
 paths:
@@ -16,42 +18,18 @@ paths:
       tags:
         - Student
       summary: Read the entire list of students.
-      description: >
+      description: |
         Returns object containing list of students inside data. Students 
         can be filtered on basis of various parameters. Each student 
         has to satisfy all parameters 
-        i.e. multiple parameters are connected by AND operation. If there are
-        more pages, next will be present, and if there are previous pages then
-        previous key will be present. pagination is always present.
-      parameters:
-        - name: name
-          in: query
-          description: > 
-            Response will contain those students whose name have 
-            stated string in them. Matching is case insensitive.
-          required: false
-          type: string
-        - name: roll
-          in: query
-          description: >
-            Response will contain those students whose roll number matches 
-            stated SQL pattern. % and _ SQL wildcards supported. Matching is case insensitive.
-          required: false
-          type: string
-        - name: branch
-          in: query
-          description: >
-            Response will contain those students whose branch is as stated. 
-            Matching is exact and case insensitive.
-          required: false
-          type: string
-        - name: subject_code
-          in: query
-          description: >
-            Response will contain those students who have taken subject 
-            with stated SQL pattern. Matching is case insensitive.
-          required: false
-          type: string
+        i.e. multiple parameters are connected by `AND` operation. 
+        
+        `link` contains hyperlink to student's complete result.
+
+        If there are more pages, `next` will be present, and if there are 
+        previous pages then `previous` key will be present. `pagination` 
+        is always present. `previous` and `next` are hyperlinks.
+
       responses:  
         200:
           description: Successfully read students.
@@ -82,13 +60,17 @@ paths:
                   "next":
                     type: string
 
-  /student/{roll}:
+  /student1/{roll}:
     get:
       operationId: nith_result_api.read
       tags:
         - Student
       summary: Get complete result of single student.
-      description: Get complete result of single student.
+      description: |
+        Get complete result of single student. `cgpi` and `sgpi` are latest one. 
+        
+        `rank` contains rank of student.
+        Rank can be on `college`, `year` and `class` level and criteria used are two viz. `cgpi` and `sgpi`.
       parameters:
         - name: roll
           in: path
