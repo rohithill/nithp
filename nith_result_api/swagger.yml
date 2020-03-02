@@ -3,8 +3,6 @@ info:
   description: This API provides access to result. Do not use this api yet.
   version: "0.1.0"
   title: NITH Result API (Experimental)
-consumes:
-  - application/json
 produces:
   - application/json
 
@@ -17,47 +15,119 @@ paths:
       operationId: nith_result_api.read_all
       tags:
         - Student
-      summary: Read the entire list of student
-      description: Read the list of student
+      summary: Read the entire list of students.
+      description: >
+        Returns object containing list of students inside data. Students 
+        can be filtered on basis of various parameters. Each student 
+        has to satisfy all parameters 
+        i.e. multiple parameters are connected by AND operation. If there are
+        more pages, next will be present, and if there are previous pages then
+        previous key will be present. pagination is always present.
+      parameters:
+        - name: name
+          in: query
+          description: > 
+            Response will contain those students whose name have 
+            stated string in them. Matching is case insensitive.
+          required: false
+          type: string
+        - name: roll
+          in: query
+          description: >
+            Response will contain those students whose roll number matches 
+            stated SQL pattern. % and _ SQL wildcards supported. Matching is case insensitive.
+          required: false
+          type: string
+        - name: branch
+          in: query
+          description: >
+            Response will contain those students whose branch is as stated. 
+            Matching is exact and case insensitive.
+          required: false
+          type: string
+        - name: subject_code
+          in: query
+          description: >
+            Response will contain those students who have taken subject 
+            with stated SQL pattern. Matching is case insensitive.
+          required: false
+          type: string
       responses:  
         200:
-          description: Successfully read people list operation
+          description: Successfully read students.
           schema:
-            type: array
-            items:
-              properties:
-                name:
-                  type: string
-                roll:
-                  type: string
-                branch:
-                  type: string
-                cgpi:
-                  type: string
-                sgpi:
-                  type: string
-                link:
-                  type: string
-  
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  properties:
+                    name:
+                      type: string
+                    roll:
+                      type: string
+                    branch:
+                      type: string
+                    cgpi:
+                      type: string
+                    sgpi:
+                      type: string
+                    link:
+                      type: string
+              pagination:
+                type: object
+                properties:
+                  "previous":
+                    type: string
+                  "next":
+                    type: string
+
   /student/{roll}:
     get:
       operationId: nith_result_api.read
       tags:
         - Student
-      summary: Read one person from the people list
-      description: Read one person from the people list
+      summary: Get complete result of single student.
+      description: Get complete result of single student.
       parameters:
         - name: roll
           in: path
-          description: Roll number of student whose result is to get
+          description: Roll number of the student whose result is to get
           type: string
           required: True
       responses:
         200:
-          description: Successfully read person from people list operation
+          description: Successfully read result of the student
           schema:
             $ref: '#/definitions/Student'
+        404:
+          description: Roll number not found
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
 
+  /subject:
+    get:
+      operationId: nith_result_api.read_subjects
+      tags:
+        - Subject
+      summary: Read the entire list of subjects
+      description: Read the list of subjects
+      responses:
+        200:
+          description: Successfully read subject list
+          schema:
+            type: array
+            items:
+              properties:
+                "sub_point":
+                  type: integer
+                "subject":
+                  type: "string"
+                "subject_code":
+                  type: "string"
 definitions:
   Student:
     type: object
@@ -116,6 +186,7 @@ definitions:
               type: string
             sem:
               type: string 
+            
   Subject:
     type: object
     properties:

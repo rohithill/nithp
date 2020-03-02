@@ -76,18 +76,32 @@ def query_db(query, args=tuple(), one=False,limit=0):
     
     return (rv[0] if rv else None) if one else rv
 
+import connexion
 def read_all():
+    name = connexion.request.args.get('name') or ''
+    branch = connexion.request.args.get('branch')
+    roll = connexion.request.args.get('roll') or '%'
+    subject_code = connexion.request.args.get('subject_code') or '%'
+
+    # sub_code = connexion.args.get('subject_code')
+    print(name,branch,roll)
+    print(connexion.request.args)
     st = time.time()
     # print(locals(), len(globals()),globals().keys(),request.path,request.endpoint)
-    
+    data = {
+        'name': name,
+        'branch' : branch,
+        'roll': roll,
+        'subject_code': subject_code
+    }
 
-    # cur.execute('''SELECT * from student''')
-    # result = cur.fetchmany(200)
-    result = query_db('SELECT * from student')
-    # print(result.keys())
+    if branch:
+        result = query_db('SELECT * from student  WHERE (INSTR(LOWER(name),LOWER(TRIM((:name)))) > 0 OR LENGTH(:name) = 0) and roll like (:roll) AND LOWER(branch)=LOWER(:branch) AND roll IN (Select roll from result where subject_code like (:subject_code))',data)
+    else:
+        result = query_db('SELECT * from student  WHERE (INSTR(LOWER(name),LOWER(TRIM((:name)))) > 0  OR LENGTH(:name) = 0) and roll like (:roll)  AND roll IN (Select roll from result where subject_code like (:subject_code))',data)
+ 
     response = []
     for row in result:
-        # print(row.keys())
         response.append({
             'name': row['name'],
             'roll': row['roll'],
@@ -112,7 +126,10 @@ def read_all():
         })
 
     print(f"Total time elapsed read_all = {time.time() - st}")
-    return response
+    return {
+        "data":response,
+        'pagination': {}
+        }
 
 def read(roll):
     st = time.time()
@@ -181,6 +198,19 @@ def read(roll):
     print(f"Total time elapsed read(roll) = {time.time() - st}")
 
     return data
+
+subject_list = []
+def read_subjects():
+    if subject_list:
+        return subject_list
+    
+    result = query_db("SELECT distinct subject_code,subject,sub_point from result")
+    for row in result:
+        subject_list.append({
+            i:row[i] for i in row.keys()
+        })
+    # print(subject_list)
+    return subject_list
 
 def find_result(rollno=None,name=None,mincgpi=0,maxcgpi=10):
     if not rollno:

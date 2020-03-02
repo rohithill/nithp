@@ -1,1 +1,1 @@
-from .main import find_result, get_single_result, read, read_all
+from .main import find_result, get_single_result, read, read_all, read_subjects
