@@ -60,7 +60,7 @@ paths:
                   "next":
                     type: string
 
-  /student1/{roll}:
+  /student/{roll}:
     get:
       operationId: nith_result_api.read
       tags:
