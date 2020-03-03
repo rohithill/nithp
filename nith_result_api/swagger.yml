@@ -4,12 +4,13 @@ info:
     This API provides access to NIT Hamirpur result. Contributions are welcome.
     
     **gzip** compression is supported. [Learn more](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding)
-  version: "0.2.0"
+
+    [See this on github](https://github.com/rohithill/nithp).
+  version: "0.3.0"
   title: NITH Result API (Beta)
 produces:
   - application/json
-consumes:
-  - application/json
+
 
 basePath: /api/result
 
