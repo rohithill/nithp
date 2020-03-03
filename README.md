@@ -11,6 +11,7 @@ Built using python3, flask, connexion, bootstrap.
 - [x] Make a interface for simple users to view their result.
 - [x] Implement a basic API to get results.
 - [ ] Implement pagination in the API.
+- [ ] Add examples on how to use API in various cases.
 
 ### Branches
 **master :**  All the changes are made in the master. All the pull requests are merged here finally.
