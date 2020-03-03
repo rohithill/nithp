@@ -1,6 +1,9 @@
 swagger: "2.0"
 info:
-  description: This API provides access to NIT Hamirpur result. Contributions are welcome.
+  description: |
+    This API provides access to NIT Hamirpur result. Contributions are welcome.
+    
+    **gzip** compression is supported. [Learn more](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding)
   version: "0.2.0"
   title: NITH Result API (Beta)
 produces:
@@ -29,7 +32,67 @@ paths:
         If there are more pages, `next` will be present, and if there are 
         previous pages then `previous` key will be present. `pagination` 
         is always present. `previous` and `next` are hyperlinks.
-
+      parameters:
+        - name: name
+          in: query
+          description: > 
+            Response will contain those students whose name have 
+            stated string in them. Matching is case insensitive.
+          required: false
+          type: string
+        - name: roll
+          in: query
+          description: >
+            Response will contain those students whose roll number matches 
+            stated SQL pattern. % and _ SQL wildcards supported. Matching is case insensitive.
+          required: false
+          type: string
+        - name: branch
+          in: query
+          description: >
+            Response will contain those students whose branch is as stated. 
+            Matching is exact and case insensitive.
+          required: false
+          type: string
+        - name: subject_code
+          in: query
+          description: >
+            Response will contain those students who have taken subject 
+            with stated SQL pattern. Matching is case insensitive.
+          required: false
+          type: string
+        - name: min_cgpi
+          in: query
+          description: >
+            Latest cgpi of the student in response is greater than  or equal to this value.
+          required: false
+          type: number
+          format: float
+          default: 0
+        - name: max_cgpi
+          in: query
+          description: >
+            Latest cgpi of the student in response is less than or equal to this value.
+          required: false
+          type: number
+          format: float
+          default: 10
+        - name: min_sgpi
+          in: query
+          description: >
+            Latest sgpi of the student in response is greater than or equal to this value.
+          required: false
+          type: number
+          format: float
+          default: 0
+        - name: max_sgpi
+          in: query
+          description: >
+            Latest sgpi of the student in response is less than or equal to this value.
+          required: false
+          type: number
+          format: float
+          default: 10
       responses:  
         200:
           description: Successfully read students.
