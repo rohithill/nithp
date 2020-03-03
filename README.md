@@ -1,6 +1,16 @@
+# NITH Projects
+A repo containing multiple projects relating to NIT Hamirpur. 
+
+#### Current list:
+- NITH Result Website
+- NITH Result API
+
+Built using python3, flask, connexion, bootstrap.
+
 ### Todo
-- [x] Implement efficient sorting in nith_result/static/main.js
-- [ ] Have a better/more responsive implementation of front end
+- [x] Make a interface for simple users to view their result.
+- [x] Implement a basic API to get results.
+- [ ] Implement pagination in the API.
 
 ### Branches
 **master :**  All the changes are made in the master. All the pull requests are merged here finally.
