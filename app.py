@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request, g
 from flask_cors import CORS
 import connexion
+from swagger_ui_bundle import swagger_ui_3_path
 
 from nith_result.nith_result import result
 from docs.main import docs
@@ -8,7 +9,7 @@ from cache import cache
 from gzipped import gzipped
 
 
-connexionApp = connexion.App(__name__)
+connexionApp = connexion.App(__name__,options={'swagger_path': swagger_ui_3_path,'swagger_url': 'doc'})
 app = connexionApp.app
 
 app.config['SECRET_KEY'] = 'you-will-never-guess'
