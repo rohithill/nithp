@@ -1,11 +1,12 @@
 import connexion
-
+from flask import url_for
 import sqlite3
 import time
 
 def query_db(query, args=tuple(), one=False,limit=0):
     conn = sqlite3.Connection('file:nithResultnew.db?mode=ro',uri=True)
     conn.row_factory = sqlite3.Row
+    # print(query,args)
     cur = conn.execute(query, args)
     rv = cur.fetchmany(limit)
     conn.close()
@@ -17,10 +18,14 @@ def read_all():
     branch = connexion.request.args.get('branch')
     roll = connexion.request.args.get('roll') or '%'
     subject_code = connexion.request.args.get('subject_code') or '%'
-    min_cgpi = connexion.request.args.get('min_cgpi') or 0
-    max_cgpi = connexion.request.args.get('max_cgpi') or 10
-    min_sgpi = connexion.request.args.get('min_sgpi') or 0
-    max_sgpi = connexion.request.args.get('max_sgpi') or 10
+    min_cgpi = float(connexion.request.args.get('min_cgpi') or 0)
+    max_cgpi = float(connexion.request.args.get('max_cgpi') or 10)
+    min_sgpi = float(connexion.request.args.get('min_sgpi') or 0)
+    max_sgpi = float(connexion.request.args.get('max_sgpi') or 10)
+    next_cursor = connexion.request.args.get('next_cursor','0')
+    limit = int(connexion.request.args.get('limit',10))
+
+    limit = min(max(1,limit),100)
 
     st = time.time()
 
@@ -32,16 +37,25 @@ def read_all():
         'min_cgpi': min_cgpi,
         'max_cgpi': max_cgpi,
         'min_sgpi': min_sgpi,
-        'max_sgpi': max_sgpi
+        'max_sgpi': max_sgpi,
+        'limit': limit+1,
+        'next_cursor': next_cursor
     }
-
     if branch:
-        result = query_db('SELECT * from student  WHERE (INSTR(LOWER(name),LOWER(TRIM((:name)))) > 0 OR LENGTH(:name) = 0) and roll like (:roll) AND LOWER(branch)=LOWER(:branch) AND cgpi BETWEEN (:min_cgpi) AND (:max_cgpi) AND sgpi BETWEEN (:min_sgpi) AND (:max_sgpi) AND roll IN (Select roll from result where subject_code like (:subject_code))',data)
+        result = query_db('''SELECT * from student  
+        WHERE (INSTR(LOWER(name),LOWER(TRIM((:name)))) > 0 OR LENGTH(:name) = 0) 
+        and roll like (:roll) AND LOWER(branch)=LOWER(:branch) AND cgpi BETWEEN (:min_cgpi) AND (:max_cgpi) 
+        AND sgpi BETWEEN (:min_sgpi) AND (:max_sgpi) AND roll IN 
+        (Select roll from result where subject_code like (:subject_code)) AND roll >= (:next_cursor) LIMIT (:limit)''',data)
     else:
-        result = query_db('SELECT * from student  WHERE (INSTR(LOWER(name),LOWER(TRIM((:name)))) > 0  OR LENGTH(:name) = 0) and roll like (:roll)  AND cgpi BETWEEN (:min_cgpi) AND (:max_cgpi) AND sgpi BETWEEN (:min_sgpi) AND (:max_sgpi) AND roll IN (Select roll from result where subject_code like (:subject_code))',data)
+        result = query_db('''SELECT * from student 
+        WHERE (INSTR(LOWER(name),LOWER(TRIM((:name)))) > 0  OR LENGTH(:name) = 0) 
+        and roll like (:roll)  AND cgpi BETWEEN (:min_cgpi) AND (:max_cgpi) 
+        AND sgpi BETWEEN (:min_sgpi) AND (:max_sgpi) 
+        AND roll IN (Select roll from result where subject_code like (:subject_code)) AND roll >= (:next_cursor) LIMIT (:limit)''',data)
  
     response = []
-    for row in result:
+    for row in result[:limit]:
         response.append({
             'name': row['name'],
             'roll': row['roll'],
@@ -64,12 +78,17 @@ def read_all():
             },
             "link" : connexion.request.path + '/'  + row['roll']
         })
+    total_records = query_db('select count(*) from student',one=True)[0]
 
     print(f"Total time elapsed read_all = {time.time() - st}")
+    next_cursor = result[-1]["roll"] if len(result) > limit else ''
+
     return {
         "data":response,
-        'pagination': {}
+        "pagination": {
+            "next_cursor" : next_cursor
         }
+    }
 
 def read(roll):
     st = time.time()

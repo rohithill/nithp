@@ -6,7 +6,7 @@ info:
     **gzip** compression is supported. [Learn more](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding)
 
     [See this on github](https://github.com/rohithill/nithp).
-  version: "0.3.0"
+  version: "0.4.0"
   title: NITH Result API (Beta)
 produces:
   - application/json
@@ -30,9 +30,10 @@ paths:
         
         `link` contains hyperlink to student's complete result.
 
-        If there are more pages, `next` will be present, and if there are 
-        previous pages then `previous` key will be present. `pagination` 
-        is always present. `previous` and `next` are hyperlinks.
+        Response to query is paginated i.e. complete response is not returned at once.
+        `pagination` has `next_cursor` whose value is needed to access more results.
+        If there are no more results, `next_cursor` is an empty string. To access more result, 
+        add `next_cursor` to the query with value from the response.
       parameters:
         - name: name
           in: query
@@ -94,6 +95,22 @@ paths:
           type: number
           format: float
           default: 10
+        - name: next_cursor
+          in: query
+          description: |
+            Used in paging the response. This is not required when querying for first time.
+            If there is more data this will be non empty in the response. In that case add next_cursor to the query
+            with value of next_cursor key from pagination in response. If this is empty string, it means there is no more data. 
+
+            Eg: If value of `next_cursor` in `pagination` section of response is `17101` then to fetch more result add `next_cursor=17101` to the query.
+          required: false
+          type: string
+        - name: limit
+          in: query
+          description: >
+            Number of records to be returned. Max value of limit is 100, default is 10.
+          required: false
+          type: integer
       responses:  
         200:
           description: Successfully read students.
@@ -119,9 +136,7 @@ paths:
               pagination:
                 type: object
                 properties:
-                  "previous":
-                    type: string
-                  "next":
+                  "next_cursor":
                     type: string
 
   /student/{roll}:
