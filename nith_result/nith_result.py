@@ -23,7 +23,7 @@ def home():
 
 @result.route('/student')
 def result_student():
-    rollno = request.args.get('rollno')
+    rollno = request.args.get('roll')
     # print(request.args,request.values)
     result = get_single_result(rollno)
 

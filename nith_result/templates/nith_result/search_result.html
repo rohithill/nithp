@@ -15,7 +15,7 @@
       <td>{{ loop.index }}</td>
       {% for cell in result %}
       {% if loop.first %}
-      <td><a href="{{ url_for('.result_student',rollno=cell) }}">{{ cell }}</a></td>
+      <td><a href="{{ url_for('.result_student',roll=cell) }}">{{ cell }}</a></td>
       {% else %}
       <td>{{ cell }}</td>
       {% endif %}
