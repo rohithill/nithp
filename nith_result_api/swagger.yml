@@ -128,9 +128,9 @@ paths:
                     branch:
                       type: string
                     cgpi:
-                      type: string
+                      type: number
                     sgpi:
-                      type: string
+                      type: number
                     link:
                       type: string
               pagination:
@@ -212,23 +212,23 @@ definitions:
             type: object
             properties:
               cgpi:
-                type: string
+                type: integer
               sgpi:
-                type: string
+                type: integer
           year:
             type: object
             properties:
               cgpi:
-                type: string
+                type: integer
               sgpi:
-                type: string
+                type: integer
           class:
             type: object
             properties:
               cgpi:
-                type: string
+                type: integer
               sgpi:
-                type: string
+                type: integer
       result:
         type: array
         items:
@@ -238,15 +238,15 @@ definitions:
         items:
           properties:
             cgpi:
-              type: string
+              type: number
             cgpi_total:
-              type: string
+              type: number
             sgpi:
-              type: string
+              type: number
             sgpi_total:
-              type: string
+              type: number
             sem:
-              type: string 
+              type: integer 
             
   Subject:
     type: object
@@ -254,12 +254,12 @@ definitions:
       grade:
         type: string
       sub_gp:
-        type: string
+        type: integer
       sub_point:
-        type: string
+        type: integer
       subject:
         type: string
       subject_code:
         type: string
       sem:
-        type: string
+        type: integer

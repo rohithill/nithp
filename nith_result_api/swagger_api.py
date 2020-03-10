@@ -44,15 +44,20 @@ def read_all():
     if branch:
         result = query_db('''SELECT * from student  
         WHERE (INSTR(LOWER(name),LOWER(TRIM((:name)))) > 0 OR LENGTH(:name) = 0) 
-        and roll like (:roll) AND LOWER(branch)=LOWER(:branch) AND cgpi BETWEEN (:min_cgpi) AND (:max_cgpi) 
-        AND sgpi BETWEEN (:min_sgpi) AND (:max_sgpi) AND roll IN 
-        (Select roll from result where subject_code like (:subject_code)) AND roll >= (:next_cursor) LIMIT (:limit)''',data)
+        AND roll like (:roll) 
+        AND LOWER(branch)=LOWER(:branch) 
+        AND cgpi BETWEEN (:min_cgpi) AND (:max_cgpi) 
+        AND sgpi BETWEEN (:min_sgpi) AND (:max_sgpi) 
+        AND roll IN (Select roll from result where subject_code like (:subject_code)) 
+        AND roll >= (:next_cursor) ORDER BY roll LIMIT (:limit)''',data)
     else:
         result = query_db('''SELECT * from student 
         WHERE (INSTR(LOWER(name),LOWER(TRIM((:name)))) > 0  OR LENGTH(:name) = 0) 
-        and roll like (:roll)  AND cgpi BETWEEN (:min_cgpi) AND (:max_cgpi) 
+        and roll like (:roll)  
+        AND cgpi BETWEEN (:min_cgpi) AND (:max_cgpi) 
         AND sgpi BETWEEN (:min_sgpi) AND (:max_sgpi) 
-        AND roll IN (Select roll from result where subject_code like (:subject_code)) AND roll >= (:next_cursor) LIMIT (:limit)''',data)
+        AND roll IN (Select roll from result where subject_code like (:subject_code)) 
+        AND roll >= (:next_cursor) ORDER BY roll LIMIT (:limit)''',data)
  
     response = []
     for row in result[:limit]:
@@ -78,15 +83,14 @@ def read_all():
             },
             "link" : connexion.request.path + '/'  + row['roll']
         })
-    total_records = query_db('select count(*) from student',one=True)[0]
 
-    print(f"Total time elapsed read_all = {time.time() - st}")
+    # print(f"Total time elapsed read_all = {time.time() - st}")
     next_cursor = result[-1]["roll"] if len(result) > limit else ''
 
     return {
         "data":response,
         "pagination": {
-            "next_cursor" : next_cursor
+            "next_cursor" : next_cursor,
         }
     }
 
