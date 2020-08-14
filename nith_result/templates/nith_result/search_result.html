@@ -3,23 +3,19 @@
 <table class="table table-striped" id="showResult" style="margin-left:auto;margin-right:auto;max-width: 700px;">
   <thead>
     <tr>
-      <th scope="col">Rank <i class="fa fa-sort"></i></th>
-      {% for cell in table_head %}
-      <th scope="col">{{ cell|title }}&nbsp<i class="fa fa-sort"></i></th>      
-      {% endfor %}
+      <th scope="col"># &nbsp;<i class="fa fa-sort"></i></th>
+      <th>Roll No &nbsp;<i class="fa fa-sort"></i></th>
+      <th>Name &nbsp;<i class="fa fa-sort"></i></th>
+      <th>CGPI &nbsp;<i class="fa fa-sort"></i></th>
     </tr>
   </thead>
   <tbody>
-    {% for result in table_body %}
+    {% for result in results %}
     <tr>
       <td>{{ loop.index }}</td>
-      {% for cell in result %}
-      {% if loop.first %}
-      <td><a href="{{ url_for('.result_student',roll=cell) }}">{{ cell }}</a></td>
-      {% else %}
-      <td>{{ cell }}</td>
-      {% endif %}
-      {% endfor %}
+      <td><a href="{{ url_for('.result_student',roll=result['roll']) }}">{{ result['roll'] }}</a></td>
+      <td>{{ result['name'] }}</td>
+      <td>{{ result['cgpi'] }}</td>
     </tr>
     {% endfor %}
   </tbody>

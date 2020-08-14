@@ -1,23 +1,28 @@
 {% extends 'nith_result/base.html' %}
-{% block content %} 
+{% block content %}
 <div class="container" style="background: white; margin-top: 2%; text-align: center;">
   <form class="form-horizontal" action="{{ url_for('result.search') }}" method="GET">
-    <legend><center><h2><b>Check Result</b></h2></center></legend><br>
+    <legend>
+      <center>
+        <h2><b>Check Result</b></h2>
+      </center>
+    </legend><br>
     <div class="form-group row">
-        <div class="col-md-2"></div>
-      <label class="col-md-2 control-label">Student Name</label>  
+      <div class="col-md-2"></div>
+      <label class="col-md-2 control-label">Student Name</label>
       <div class="col-md-4 inputGroupContainer">
         <div class="input-group">
-          <input  name="name"  style="border-radius:6px" placeholder="Student Name" class="form-control"  type="text">
+          <input name="name" style="border-radius:6px" placeholder="Student Name" class="form-control" type="text">
         </div>
       </div>
     </div>
     <div class="form-group row">
-        <div class="col-md-2"></div>
-      <label class="col-md-2 control-label">Roll No.</label>  
+      <div class="col-md-2"></div>
+      <label class="col-md-2 control-label">Roll No.</label>
       <div class="col-md-4 inputGroupContainer">
         <div class="input-group">
-          <input style="border-radius:6px" name="roll" id="roll" placeholder="Roll No." class="form-control"  type="text">
+          <input style="border-radius:6px" name="roll" id="roll" placeholder="Roll No." class="form-control"
+            type="text">
           <!-- Supports SQL like matching. -->
         </div>
       </div>
@@ -25,13 +30,34 @@
     <div class="form-group row">
       <div class="col-md-2"></div>
       <label class="col-md-2 control-label">CGPI Range</label>
-        <div class="input-group col-md-4" style="margin-left: 0%;">
-            <input style="border-radius:6px; width: 40%;margin-left: 0%; left: 0;" name="mincgpi" placeholder="from" class="form-control" min="0" max="10"  type="number" step="0.01">
-            <h5>&nbsp;&nbsp;&nbsp;</h5>
-            <input style="border-radius:5px; width: 40%; right: 0;" name="maxcgpi" placeholder="upto" class="form-control" min="0" max="10"  type="number" step="0.01">
-        </div>
+      <div class="input-group col-md-4" style="margin-left: 0%;">
+        <input style="border-radius:6px; width: 40%;margin-left: 0%; left: 0;" name="mincgpi" placeholder="from"
+          class="form-control" min="0" max="10" type="number" step="0.01">
+        <h5>&nbsp;&nbsp;&nbsp;</h5>
+        <input style="border-radius:5px; width: 40%; right: 0;" name="maxcgpi" placeholder="upto" class="form-control"
+          min="0" max="10" type="number" step="0.01">
+      </div>
     </div>
     <button type="submit" class="btn btn-primary">Get Result</button>
-  </form>  
+  </form>
+</div>
+<div class="container">
+  <h3>How to Use</h3>
+  <p>All fields are joined by <b>AND</b> operation. Use <b>%</b> to match and filter name and roll number. Leaving
+    everything empty will give result of all
+    students.</p>
+</div>
+<div class="container">
+  <p><b>Eg</b>: Find all Student is CSE (B Tech) department of 2017 batch who has Rohit in their name.</p>
+  <p>Name as matched by substring. Roll No of CSE 2017 batch starts with 175. We will use % operator to match anything
+    after this prefix.</p>
+</div>
+<div class="container">
+  <p>
+    So we can write <br>
+    Student Name : Rohit <br>
+    Roll No : 175% <br>
+  </p>
+</div>
 </div>
 {% endblock %}

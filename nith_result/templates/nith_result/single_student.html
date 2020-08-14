@@ -1,0 +1,108 @@
+{% extends 'nith_result/base.html' %}
+{% block content %}
+<style>
+  .table {
+    margin: 30px auto;
+    max-width: max-content;
+  }
+</style>
+<div class="container-fluid">
+  <table class="table table-responsive">
+    <thead>
+      <tr>
+        <th>Roll No</th>
+        <th>Name</th>
+        <th>Branch</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ result.get('roll') }}</td>
+        <td>{{ result.get('name') }}</td>
+        <td>{{ result.get('branch') }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- </div>
+<div class="container"> -->
+  <table class="table bs-select table-striped table-responsive">
+    <thead>
+      <tr>
+        <th scope="col">Sem</th>
+        <th scope="col">SGPI</th>
+        <th scope="col">CGPI</th>
+        <th scope="col">SGPI Total</th>
+        <th scope="col">CGPI Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in result['summary'] %}
+      <tr>
+        <td>{{ row['sem'] }}</td>
+        <td>{{ row['sgpi'] }}</td>
+        <td>{{ row['cgpi'] }}</td>
+        <td>{{ row['sgpi_total'] }}</td>
+        <td>{{ row['cgpi_total'] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <table class="table bs-select table-striped table-responsive" style="align-content: center;">
+    <thead>
+      <!-- <tr>
+        <th rowspan="2">Rank</th>
+        <th colspan="2" style="text-align: center;">On the basis of</th>
+      </tr> -->
+      <tr>
+        <th>Rank</th>
+        <th scope="col">SGPI ({{ result['sgpi'] }})</th>
+        <th scope="col">CGPI ({{ result['cgpi'] }})</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Class</th>
+        <td>{{ result['rank']['class']['sgpi'] }}</td>
+        <td>{{ result['rank']['class']['cgpi'] }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Year</th>
+        <td>{{ result['rank']['year']['sgpi'] }}</td>
+        <td>{{ result['rank']['year']['cgpi'] }}</td>
+      </tr>
+      <tr>
+        <th scope="row">College</th>
+        <td>{{ result['rank']['college']['sgpi'] }}</td>
+        <td>{{ result['rank']['college']['cgpi'] }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- </div>
+<div class="container"> -->
+  <table id="showResult" class="table bs-select table-striped table-responsive" id="{{ rollno }}">
+    <thead>
+      <tr>
+        <th scope="col">Sem &nbsp<i class="fa fa-sort"></i></th>
+        <th scope="col">Subject Code &nbsp<i class="fa fa-sort"></i></th>
+        <th scope="col">Subject &nbsp<i class="fa fa-sort"></i></th>
+        <th scope="col">Grade &nbsp<i class="fa fa-sort"></i></th>
+        <th scope="col">Sub GP &nbsp<i class="fa fa-sort"></i></th>
+        <th scope="col">Sub Point &nbsp<i class="fa fa-sort"></i></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in result['result'] %}
+      <tr>
+        <td> {{ row['sem'] }} </td>
+        <td> {{ row['subject_code'] }} </td>
+        <td> {{ row['subject'] }} </td>
+        <td> {{ row['grade'] }} </td>
+        <td> {{ row['sub_gp'] }} </td>
+        <td> {{ row['sub_point'] }} </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

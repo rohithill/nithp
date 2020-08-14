@@ -27,6 +27,17 @@ def read_all():
 
     limit = min(max(1,limit),100)
 
+    return get_all_data(name,branch,roll,subject_code,min_cgpi,max_cgpi,min_sgpi,max_sgpi,next_cursor,limit)
+
+def get_all_data(name=None,branch=None,roll=None,subject_code='%',min_cgpi=0,max_cgpi=10,min_sgpi=0,max_sgpi=10,next_cursor='0',limit=10,sort_by_cgpi=False):
+    name = name or ''
+    roll = roll or '%'
+    min_cgpi = float(min_cgpi or 0)
+    max_cgpi = float(max_cgpi or 10)
+    min_sgpi = float(min_sgpi or 0)
+    max_sgpi = float(max_sgpi or 10)
+
+    # limit = min(max(1,limit),100)
     st = time.time()
 
     data = {
@@ -41,23 +52,26 @@ def read_all():
         'limit': limit+1,
         'next_cursor': next_cursor
     }
+    order_by_col = 'roll'
+    if sort_by_cgpi:
+        order_by_col = 'cgpi DESC'
     if branch:
-        result = query_db('''SELECT * from student  
+        result = query_db(f'''SELECT * from student  
         WHERE (INSTR(LOWER(name),LOWER(TRIM((:name)))) > 0 OR LENGTH(:name) = 0) 
         AND roll like (:roll) 
         AND LOWER(branch)=LOWER(:branch) 
         AND cgpi BETWEEN (:min_cgpi) AND (:max_cgpi) 
         AND sgpi BETWEEN (:min_sgpi) AND (:max_sgpi) 
         AND roll IN (Select roll from result where subject_code like (:subject_code)) 
-        AND roll >= (:next_cursor) ORDER BY roll LIMIT (:limit)''',data)
+        AND roll >= (:next_cursor) ORDER BY {order_by_col} LIMIT (:limit)''',data)
     else:
-        result = query_db('''SELECT * from student 
+        result = query_db(f'''SELECT * from student 
         WHERE (INSTR(LOWER(name),LOWER(TRIM((:name)))) > 0  OR LENGTH(:name) = 0) 
         and roll like (:roll)  
         AND cgpi BETWEEN (:min_cgpi) AND (:max_cgpi) 
         AND sgpi BETWEEN (:min_sgpi) AND (:max_sgpi) 
         AND roll IN (Select roll from result where subject_code like (:subject_code)) 
-        AND roll >= (:next_cursor) ORDER BY roll LIMIT (:limit)''',data)
+        AND roll >= (:next_cursor) ORDER BY {order_by_col} LIMIT (:limit)''',data)
  
     response = []
     for row in result[:limit]:

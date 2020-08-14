@@ -1,7 +1,10 @@
 from flask import Flask, Blueprint, render_template, redirect, request, url_for, jsonify
-from nith_result_api import find_result as api_result,get_single_result
-import json
+from nith_result_api import find_result as api_result,get_single_result, read as get_single_result, get_all_data
 from cache import cache
+
+import json
+import operator
+import time
 
 result = Blueprint('result',__name__,template_folder='templates',static_folder='static')
 
@@ -22,22 +25,12 @@ def home():
     return render_template('nith_result/home.html')
 
 @result.route('/student')
+@cache.cached(timeout=600,query_string=True)
 def result_student():
     rollno = request.args.get('roll')
-    # print(request.args,request.values)
     result = get_single_result(rollno)
+    return render_template('nith_result/single_student.html',result=result)
 
-    # Add grade column as it's not returned by get_single_result
-    result['head'] = (*result['head'],'grade')
-    
-    # calculate grade from pointer
-    for row in range(len(result['body'])):
-        result['body'][row] = (*result['body'][row],
-        pointer_to_grade[result['body'][row][result['head'].index('pointer')]])
-    table_summary = {'body' : [(1,8,8)]}
-    return render_template('nith_result/result_student.html',table=result,table_summary=table_summary)
-
-import operator
 @result.route('/search')
 @cache.cached(timeout=600,query_string=True)
 def search():
@@ -46,17 +39,11 @@ def search():
     name = request.args.get('name')
     mincgpi = request.args.get('mincgpi')
     maxcgpi = request.args.get('maxcgpi')
+    # next_cursor = request.args.get('next_cursor') or '0'
 
-    # print(mincgpi,maxcgpi,name,rollno,'here')
-    import time
     st = time.perf_counter()
-    response = api_result(rollno,name,mincgpi,maxcgpi)    
+    results = get_all_data(name=name,roll=rollno,min_cgpi=mincgpi,max_cgpi=maxcgpi,limit=10000,sort_by_cgpi=True)
     et = time.perf_counter()
-    print("Time taken to process query: ", et - st)
-    # print(response)
-    table_head = response.get('head')
-    table_body = response.get('body')
+    print("Time taken to process Search query: ", et - st)
 
-    table_body.sort(key=operator.itemgetter(table_head.index('cgpi')),reverse=True)
-
-    return render_template('nith_result/search_result.html',table_head=table_head,table_body=table_body)
+    return render_template('nith_result/search_result.html',results=results['data'])
