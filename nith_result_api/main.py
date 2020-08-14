@@ -48,7 +48,7 @@ def find_result(rollno=None,name=None,mincgpi=0,maxcgpi=10):
     response_array = {
     'head':('rollno','name','cgpi'),
     'body':[]}
-    conn = sqlite3.connect('file:nithResult.db?mode=ro',uri=True)
+    conn = sqlite3.connect('file:nithResult_jan2020.db?mode=ro',uri=True)
     print('Created connnection: ',diff())
     # print(conn.execute('SELECT LENGTH('ROHIT');').fetchall())
     # print('name',name,repr(name))
@@ -65,7 +65,7 @@ def find_result(rollno=None,name=None,mincgpi=0,maxcgpi=10):
 
 def get_single_result(rollno,sem=None):
     rollno = rollno.lower()
-    conn = sqlite3.connect('nithResult.db')
+    conn = sqlite3.connect('nithResult_jan2020.db')
     # rollnos = conn.execute('SELECT rollno FROM student WHERE rollno LIKE (?)',(rollno,)).fetchall()
     # for rollno,*_ in rollnos:
     response = {
