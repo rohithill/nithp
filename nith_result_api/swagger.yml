@@ -54,7 +54,7 @@ paths:
         - name: branch
           in: query
           description: >
-            Response will contain those students whose branch is as stated. 
+            Response will contain those students whose branch is as stated. [ civil, electrical, mechanical, ece, ece_dual, cse , cse_dual, architecture, chemical, material ] 
             Matching is exact and case insensitive.
           required: false
           type: string
@@ -110,7 +110,7 @@ paths:
         - name: limit
           in: query
           description: >
-            Number of records to be returned. Max value of limit is 100, default is 10.
+            Number of records to be returned. Max value of limit is 150, default is 10.
           required: false
           type: integer
       responses:  
