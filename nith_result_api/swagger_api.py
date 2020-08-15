@@ -25,7 +25,7 @@ def read_all():
     next_cursor = connexion.request.args.get('next_cursor','0')
     limit = int(connexion.request.args.get('limit',10))
 
-    limit = min(max(1,limit),150)
+    limit = min(max(1,limit),5000)
 
     st = time.time()
 

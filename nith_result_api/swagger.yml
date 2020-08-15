@@ -110,7 +110,7 @@ paths:
         - name: limit
           in: query
           description: >
-            Number of records to be returned. Max value of limit is 150, default is 10.
+            Number of records to be returned. Max value of limit is 5000, default is 10.
           required: false
           type: integer
       responses:  
