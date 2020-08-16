@@ -53,9 +53,20 @@ paths:
           type: string
         - name: branch
           in: query
-          description: >
-            Response will contain those students whose branch is as stated. 
-            Matching is exact and case insensitive.
+          description:
+            "Response will contain those students whose branch is as stated. 
+            Matching is exact and case insensitive. This parameter can take following values:
+            
+            `ARCHITECTURE,
+            CHEMICAL,
+            CIVIL,
+            CSE,
+            CSE_DUAL,
+            ECE,
+            ECE_DUAL,
+            ELECTRICAL,
+            MATERIAL,
+            MECHANICAL`"
           required: false
           type: string
         - name: subject_code
