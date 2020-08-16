@@ -1,10 +1,15 @@
 import connexion
 from flask import url_for
+
 import sqlite3
 import time
+from functools import wraps
+import urllib.request
+import os
+import threading
 
 def query_db(query, args=tuple(), one=False,limit=0):
-    conn = sqlite3.Connection('file:nithResult.db?mode=ro',uri=True)
+    conn = sqlite3.connect('file:nithResult.db?mode=ro',uri=True)
     conn.row_factory = sqlite3.Row
     # print(query,args)
     cur = conn.execute(query, args)
@@ -13,65 +18,82 @@ def query_db(query, args=tuple(), one=False,limit=0):
     
     return (rv[0] if rv else None) if one else rv
 
+def make_request():
+    url = os.getenv('COUNT_API_URL') or 'https://api.countapi.xyz/hit/nithp/NITH_RESULT_API'
+    req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0'})
+    res = urllib.request.urlopen(req,timeout=5)
+
+def hit_counter(func):
+    @wraps(func)
+    def wrapper(*args,**kwargs):
+        try:
+            threading.Thread(target=make_request).start()
+        except Exception as e:
+            print("Counter update failed ", e)
+        finally:
+            return func(*args,**kwargs)
+    return wrapper
+
+@hit_counter    
 def read_all():
-    name = connexion.request.args.get('name') or ''
-    branch = connexion.request.args.get('branch')
-    roll = connexion.request.args.get('roll') or '%'
-    subject_code = connexion.request.args.get('subject_code') or '%'
-    min_cgpi = float(connexion.request.args.get('min_cgpi') or 0)
-    max_cgpi = float(connexion.request.args.get('max_cgpi') or 10)
-    min_sgpi = float(connexion.request.args.get('min_sgpi') or 0)
-    max_sgpi = float(connexion.request.args.get('max_sgpi') or 10)
-    next_cursor = connexion.request.args.get('next_cursor','0')
-    limit = int(connexion.request.args.get('limit',50))
+    args = ('name','branch','roll','subject_code','min_cgpi','max_cgpi','min_sgpi','max_sgpi','next_cursor','limit','sort_by_cgpi')
+    data = {}
+    # print(connexion.request.args)
+    for arg in args:
+        data[arg] = connexion.request.args.get(arg)
+    # print(data)
+    st = time.perf_counter()
+    resp = get_all_data(data)
+    et = time.perf_counter()
 
-    limit = min(max(1,limit),1000)
+    print('Time taken to get_all_data: ',et - st)
+    return resp
+    # return get_all_data(data)
 
-    return get_all_data(name,branch,roll,subject_code,min_cgpi,max_cgpi,min_sgpi,max_sgpi,next_cursor,limit)
+def get_all_data(data):
+    check_and_set_default(data)
+    limit = data['limit']
+    data['limit'] += 1
 
-def get_all_data(name=None,branch=None,roll=None,subject_code='%',min_cgpi=0,max_cgpi=10,min_sgpi=0,max_sgpi=10,next_cursor='0',limit=50,sort_by_cgpi=False):
-    name = name or ''
-    roll = roll or '%'
-    min_cgpi = float(min_cgpi or 0)
-    max_cgpi = float(max_cgpi or 10)
-    min_sgpi = float(min_sgpi or 0)
-    max_sgpi = float(max_sgpi or 10)
-
-    # limit = min(max(1,limit),100)
-    st = time.time()
-
-    data = {
-        'name': name,
-        'branch' : branch,
-        'roll': roll,
-        'subject_code': subject_code,
-        'min_cgpi': min_cgpi,
-        'max_cgpi': max_cgpi,
-        'min_sgpi': min_sgpi,
-        'max_sgpi': max_sgpi,
-        'limit': limit+1,
-        'next_cursor': next_cursor
-    }
-    order_by_col = 'roll'
-    if sort_by_cgpi:
-        order_by_col = 'cgpi DESC'
-    if branch:
-        result = query_db(f'''SELECT * from student  
-        WHERE (INSTR(LOWER(name),LOWER(TRIM((:name)))) > 0 OR LENGTH(:name) = 0) 
-        AND roll like (:roll) 
-        AND LOWER(branch)=LOWER(:branch) 
-        AND cgpi BETWEEN (:min_cgpi) AND (:max_cgpi) 
-        AND sgpi BETWEEN (:min_sgpi) AND (:max_sgpi) 
-        AND roll IN (Select roll from result where subject_code like (:subject_code)) 
-        AND roll >= (:next_cursor) ORDER BY {order_by_col} LIMIT (:limit)''',data)
+    if data['sort_by_cgpi']:
+        data['next_cursor'] = int(data['next_cursor'])
+        if data['branch']:
+            result = query_db(f'''SELECT * FROM (
+                SELECT *,row_number() over (order by cgpi desc) ROW_NUM from student  
+                WHERE (INSTR(LOWER(name),LOWER(TRIM((:name)))) > 0 OR LENGTH(:name) = 0) 
+                AND roll like (:roll)
+                AND LOWER(branch)=LOWER(:branch) 
+                AND cgpi BETWEEN (:min_cgpi) AND (:max_cgpi) 
+                AND sgpi BETWEEN (:min_sgpi) AND (:max_sgpi) 
+                AND roll IN (Select roll from result where subject_code like (:subject_code))
+            ) t WHERE ROW_NUM >= (:next_cursor) LIMIT (:limit)''',data)
+        else:
+            result = query_db(f'''SELECT * FROM (
+                SELECT *,row_number() over (order by cgpi desc) ROW_NUM from student  
+                WHERE (INSTR(LOWER(name),LOWER(TRIM((:name)))) > 0 OR LENGTH(:name) = 0) 
+                AND cgpi BETWEEN (:min_cgpi) AND (:max_cgpi) 
+                AND sgpi BETWEEN (:min_sgpi) AND (:max_sgpi) 
+                AND roll IN (Select roll from result where subject_code like (:subject_code))
+                AND roll like (:roll)
+            ) t WHERE ROW_NUM >= (:next_cursor) LIMIT (:limit)''',data)
     else:
-        result = query_db(f'''SELECT * from student 
-        WHERE (INSTR(LOWER(name),LOWER(TRIM((:name)))) > 0  OR LENGTH(:name) = 0) 
-        and roll like (:roll)  
-        AND cgpi BETWEEN (:min_cgpi) AND (:max_cgpi) 
-        AND sgpi BETWEEN (:min_sgpi) AND (:max_sgpi) 
-        AND roll IN (Select roll from result where subject_code like (:subject_code)) 
-        AND roll >= (:next_cursor) ORDER BY {order_by_col} LIMIT (:limit)''',data)
+        if data['branch']:
+            result = query_db(f'''SELECT * from student  
+            WHERE (INSTR(LOWER(name),LOWER(TRIM((:name)))) > 0 OR LENGTH(:name) = 0) 
+            AND roll like (:roll) 
+            AND LOWER(branch)=LOWER(:branch) 
+            AND cgpi BETWEEN (:min_cgpi) AND (:max_cgpi) 
+            AND sgpi BETWEEN (:min_sgpi) AND (:max_sgpi) 
+            AND roll IN (Select roll from result where subject_code like (:subject_code)) 
+            AND roll >= (:next_cursor) ORDER BY roll LIMIT (:limit)''',data)
+        else:
+            result = query_db(f'''SELECT * from student 
+            WHERE (INSTR(LOWER(name),LOWER(TRIM((:name)))) > 0  OR LENGTH(:name) = 0) 
+            and roll like (:roll)  
+            AND cgpi BETWEEN (:min_cgpi) AND (:max_cgpi) 
+            AND sgpi BETWEEN (:min_sgpi) AND (:max_sgpi) 
+            AND roll IN (Select roll from result where subject_code like (:subject_code)) 
+            AND roll >= (:next_cursor) ORDER BY roll LIMIT (:limit)''',data)
  
     response = []
     for row in result[:limit]:
@@ -97,17 +119,20 @@ def get_all_data(name=None,branch=None,roll=None,subject_code='%',min_cgpi=0,max
             },
             "link" : connexion.request.path + '/'  + row['roll']
         })
+    if data['sort_by_cgpi']:
+        next_cursor = result[-1]["row_num"] if len(result) > limit else ''
+    else:
+        next_cursor = result[-1]["roll"] if len(result) > limit else ''
 
-    # print(f"Total time elapsed read_all = {time.time() - st}")
-    next_cursor = result[-1]["roll"] if len(result) > limit else ''
 
     return {
         "data":response,
         "pagination": {
-            "next_cursor" : next_cursor,
+            "next_cursor" : str(next_cursor),
         }
     }
 
+@hit_counter
 def read(roll):
     st = time.time()
     data = {
@@ -176,6 +201,7 @@ def read(roll):
     return data
 
 subject_list = []
+@hit_counter
 def read_subjects():
     if subject_list:
         return subject_list
@@ -186,3 +212,37 @@ def read_subjects():
             i:row[i] for i in row.keys()
         })
     return subject_list
+
+def check_and_set_default(data):
+    MAX_ROWS_LIMIT = 1000
+
+    defaults = {
+        'name' : '',
+        'branch' : None,
+        'roll' : '%',
+        'subject_code' : '%',
+        'min_cgpi' : 0,
+        'max_cgpi' : 10,
+        'min_sgpi' : 0,
+        'max_sgpi' : 10,
+        'sort_by_cgpi': False,
+        'limit' : 50,
+        'next_cursor' : 0,
+    }
+    validate = {
+        'name' : lambda x: x or defaults['name'],
+        'branch' : lambda x: x.upper() if x else defaults['branch'],
+        'roll' : lambda x: x.upper() if x else defaults['roll'],
+        'subject_code': lambda x: x.upper() if x else defaults['subject_code'],
+        'min_cgpi' : lambda x: float(x) if x and 0 <= float(x) <= 10 else defaults['min_cgpi'],
+        'max_cgpi' : lambda x: float(x) if x and 0 <= float(x) <= 10 else defaults['max_cgpi'],
+        'min_sgpi' : lambda x: float(x) if x and 0 <= float(x) <= 10 else defaults['min_sgpi'],
+        'max_sgpi' : lambda x: float(x) if x and 0 <= float(x) <= 10 else defaults['max_sgpi'],
+        'sort_by_cgpi' : lambda x: x and x.lower() == 'true',
+        'limit' : lambda x: int(x) if x and int(x) > 0 and int(x) <= MAX_ROWS_LIMIT else defaults['limit'],
+        'next_cursor' : lambda x: x or defaults['next_cursor'],
+    }
+    assert defaults.keys() == validate.keys(), 'For every arg there must exists a default value and validation function. One of them is missing.'
+
+    for prop in validate:
+        data[prop] = validate[prop](data.get(prop))

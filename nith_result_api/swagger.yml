@@ -55,20 +55,20 @@ paths:
           in: query
           description:
             "Response will contain those students whose branch is as stated. 
-            Matching is exact and case insensitive. This parameter can take following values:
-            
-            `ARCHITECTURE,
-            CHEMICAL,
-            CIVIL,
-            CSE,
-            CSE_DUAL,
-            ECE,
-            ECE_DUAL,
-            ELECTRICAL,
-            MATERIAL,
-            MECHANICAL`"
+            Matching is exact and case sensitive."
           required: false
           type: string
+          enum:
+            - ARCHITECTURE
+            - CHEMICAL 
+            - CIVIL 
+            - CSE 
+            - CSE_DUAL 
+            - ECE 
+            - ECE_DUAL 
+            - ELECTRICAL 
+            - MATERIAL 
+            - MECHANICAL
         - name: subject_code
           in: query
           description: >
@@ -84,6 +84,8 @@ paths:
           type: number
           format: float
           default: 0
+          minimum: 0
+          maximum: 10
         - name: max_cgpi
           in: query
           description: >
@@ -92,6 +94,8 @@ paths:
           type: number
           format: float
           default: 10
+          minimum: 0
+          maximum: 10
         - name: min_sgpi
           in: query
           description: >
@@ -100,6 +104,8 @@ paths:
           type: number
           format: float
           default: 0
+          minimum: 0
+          maximum: 10
         - name: max_sgpi
           in: query
           description: >
@@ -108,6 +114,8 @@ paths:
           type: number
           format: float
           default: 10
+          minimum: 0
+          maximum: 10
         - name: next_cursor
           in: query
           description: |
@@ -124,6 +132,13 @@ paths:
             Number of records to be returned. Max value of limit is 1000, default is 50.
           required: false
           type: integer
+        - name: sort_by_cgpi
+          in: query
+          description: >
+            Give result in order sorted by cgpi in descending order
+          required: false
+          type: boolean
+          default: false
       responses:  
         200:
           description: Successfully read students.

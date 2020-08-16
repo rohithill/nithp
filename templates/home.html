@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <!-- <link href="{{ url_for('static',filename='bootstrap.min.css') }}" rel="stylesheet" media="screen"> -->
   <style>
     .card {
@@ -27,13 +28,20 @@
       </div>
       <div class="card" style="width: 18rem;">
         <div class="card-body">
-          <h5 class="card-title">NITH Result API</h5>
+          <h5 class="card-title">NITH Result API <p id="hit_counter"></p>
+          </h5>
           <p class="card-text">API for developers to get data from this website.</p>
           <a href="{{ url_for('/api/result./api/result_swagger_ui_index') }}" class="btn btn-primary">See docs</a>
         </div>
       </div>
     </div>
   </div>
+  <script>
+    fetch('https://api.countapi.xyz/get/nithp/NITH_RESULT_API')
+      .then(res => res.json())
+      .then(res => {
+        document.getElementById('hit_counter').innerText = `(${res.value} hits)`;
+      });
+  </script>
 </body>
-
 </html>

@@ -10,7 +10,7 @@ Built using python3, flask, connexion, bootstrap. Virtual environment is managed
 ## Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-Please make sure that python version >= 3.7.
+Please make sure that python version >= 3.8.
 
 Open the terminal and run the following commands:
 
@@ -36,6 +36,7 @@ $ flask run
 - [x] Make a interface for simple users to view their result.
 - [x] Implement a basic API to get results.
 - [x] Implement pagination in the API.
+- [x] Add sorting parameter in API
 - [ ] Add examples on how to use API in various cases.
 
 
