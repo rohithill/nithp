@@ -239,7 +239,7 @@ def check_and_set_default(data):
         'min_sgpi' : lambda x: float(x) if x and 0 <= float(x) <= 10 else defaults['min_sgpi'],
         'max_sgpi' : lambda x: float(x) if x and 0 <= float(x) <= 10 else defaults['max_sgpi'],
         'sort_by_cgpi' : lambda x: x and x.lower() == 'true',
-        'limit' : lambda x: int(x) if x and int(x) > 0 and int(x) <= MAX_ROWS_LIMIT else defaults['limit'],
+        'limit' : lambda x: min(int(x),MAX_ROWS_LIMIT) if x and int(x) > 0 else defaults['limit'],
         'next_cursor' : lambda x: x or defaults['next_cursor'],
     }
     assert defaults.keys() == validate.keys(), 'For every arg there must exists a default value and validation function. One of them is missing.'
