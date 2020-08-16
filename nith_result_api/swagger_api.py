@@ -55,7 +55,9 @@ def get_all_data(data):
     limit = data['limit']
     data['limit'] += 1
 
-    if data['sort_by_cgpi']:
+    if sqlite3.sqlite_version >= '3.29.0' and data['sort_by_cgpi']:
+        # ROW_NUMBER() is available on sqlite >= 3.25.0, I have tested it on 3.28.0
+        # Heroku currently has 3.22.0, hence it will not work on heroku as of now.
         data['next_cursor'] = int(data['next_cursor'])
         if data['branch']:
             result = query_db(f'''SELECT * FROM (
@@ -119,7 +121,7 @@ def get_all_data(data):
             },
             "link" : connexion.request.path + '/'  + row['roll']
         })
-    if data['sort_by_cgpi']:
+    if data['sort_by_cgpi'] and sqlite3.sqlite_version >= '3.29.0':
         next_cursor = result[-1]["row_num"] if len(result) > limit else ''
     else:
         next_cursor = result[-1]["roll"] if len(result) > limit else ''
