@@ -23,13 +23,13 @@ def read_all():
     min_sgpi = float(connexion.request.args.get('min_sgpi') or 0)
     max_sgpi = float(connexion.request.args.get('max_sgpi') or 10)
     next_cursor = connexion.request.args.get('next_cursor','0')
-    limit = int(connexion.request.args.get('limit',10))
+    limit = int(connexion.request.args.get('limit',50))
 
-    limit = min(max(1,limit),100)
+    limit = min(max(1,limit),1000)
 
     return get_all_data(name,branch,roll,subject_code,min_cgpi,max_cgpi,min_sgpi,max_sgpi,next_cursor,limit)
 
-def get_all_data(name=None,branch=None,roll=None,subject_code='%',min_cgpi=0,max_cgpi=10,min_sgpi=0,max_sgpi=10,next_cursor='0',limit=10,sort_by_cgpi=False):
+def get_all_data(name=None,branch=None,roll=None,subject_code='%',min_cgpi=0,max_cgpi=10,min_sgpi=0,max_sgpi=10,next_cursor='0',limit=50,sort_by_cgpi=False):
     name = name or ''
     roll = roll or '%'
     min_cgpi = float(min_cgpi or 0)
