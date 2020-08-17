@@ -1,5 +1,8 @@
 {% extends 'nith_result/base.html' %}
 {% block content %}
+<div class="container">
+  <p style="margin-left:auto;margin-right:auto;max-width: 700px;">{{ results|length }} rows returned in {{ '%.2f'|format(time_taken) }} seconds</p>
+</div>
 <table class="table table-striped" id="showResult" style="margin-left:auto;margin-right:auto;max-width: 700px;">
   <thead>
     <tr>

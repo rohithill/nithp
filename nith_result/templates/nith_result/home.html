@@ -29,6 +29,34 @@
     </div>
     <div class="form-group row">
       <div class="col-md-2"></div>
+      <label class="col-md-2 control-label">Branch</label>
+      <div class="col-md-4 inputGroupContainer">
+        <div class="input-group">
+          <select class="form-control" name="branch">
+            <option value="">Choose branch</option>
+            {% for branch in branches %}
+            <option value="{{ branch }}">{{ branch }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-md-2"></div>
+      <label class="col-md-2 control-label">Batch</label>
+      <div class="col-md-4 inputGroupContainer">
+        <div class="input-group">
+          <select class="form-control" name="year">
+            <option value="">Choose year</option>
+            {% for year in years %}
+            <option value="{{ year }}">{{ year }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-md-2"></div>
       <label class="col-md-2 control-label">CGPI Range</label>
       <div class="input-group col-md-4" style="margin-left: 0%;">
         <input style="border-radius:6px; width: 40%;margin-left: 0%; left: 0;" name="mincgpi" placeholder="from"

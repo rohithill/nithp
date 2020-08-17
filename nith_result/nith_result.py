@@ -1,5 +1,5 @@
 from flask import Flask, Blueprint, render_template, redirect, request, url_for, jsonify
-from nith_result_api import find_result as api_result,get_single_result, read as get_single_result, get_all_data
+from nith_result_api import read as get_single_result, get_all_data
 from cache import cache
 
 import json
@@ -22,7 +22,18 @@ pointer_to_grade = {
 
 @result.route('/')
 def home():
-    return render_template('nith_result/home.html')
+    return render_template('nith_result/home.html',
+        branches=['ARCHITECTURE',
+            'CHEMICAL',
+            'CIVIL',
+            'CSE',
+            'CSE_DUAL',
+            'ECE',
+            'ECE_DUAL',
+            'ELECTRICAL',
+            'MATERIAL',
+            'MECHANICAL'],
+        years=['2015','2016','2017','2018','2019'])
 
 @result.route('/student')
 @cache.cached(timeout=600,query_string=True)
@@ -34,16 +45,29 @@ def result_student():
 @result.route('/search')
 @cache.cached(timeout=600,query_string=True)
 def search():
-    rollno = request.args.get('roll')
-    rollno = rollno.lower()
-    name = request.args.get('name')
-    mincgpi = request.args.get('mincgpi')
-    maxcgpi = request.args.get('maxcgpi')
-    # next_cursor = request.args.get('next_cursor') or '0'
+    year = request.args.get('year')
+    roll = None
+    if year.isdecimal():
+        if len(year) == 4:
+            roll = year[-2:] + '%'
 
+    data = {
+        'roll' : request.args.get('roll') or roll,
+        'name' : request.args.get('name'),
+        'mincgpi' : request.args.get('mincgpi'),
+        'maxcgpi' : request.args.get('maxcgpi'),
+        'next_cursor' : request.args.get('next_cursor'),
+        'branch' : request.args.get('branch'),
+        'limit' : 10,
+        'sort_by_cgpi' : 'true'
+    }
     st = time.perf_counter()
-    results = get_all_data(name=name,roll=rollno,min_cgpi=mincgpi,max_cgpi=maxcgpi,limit=10000,sort_by_cgpi=True)
+    results = get_all_data(data,exceptional_limit=True)
     et = time.perf_counter()
-    print("Time taken to process Search query: ", et - st)
+    time_taken = et - st
+    print("⏲Time taken to process Search query: ", time_taken)
 
-    return render_template('nith_result/search_result.html',results=results['data'])
+    return render_template('nith_result/search_result.html',
+        results=results['data'],
+        next_cursor=results['pagination']['next_cursor'],
+        time_taken=time_taken)
