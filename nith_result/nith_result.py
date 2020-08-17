@@ -54,13 +54,14 @@ def search():
     data = {
         'roll' : request.args.get('roll') or roll,
         'name' : request.args.get('name'),
-        'mincgpi' : request.args.get('mincgpi'),
-        'maxcgpi' : request.args.get('maxcgpi'),
+        'min_cgpi' : request.args.get('min_cgpi'),
+        'max_cgpi' : request.args.get('max_cgpi'),
         'next_cursor' : request.args.get('next_cursor'),
         'branch' : request.args.get('branch'),
         'limit' : 10,
         'sort_by_cgpi' : 'true'
     }
+
     st = time.perf_counter()
     results = get_all_data(data,exceptional_limit=True)
     et = time.perf_counter()

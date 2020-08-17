@@ -14,6 +14,18 @@ def query_db(query, args=tuple(), one=False,limit=0):
 
     return (rv[0] if rv else None) if one else rv
 
+def timer(description):
+    def outer(func):
+        @wraps(func)
+        def wrapper(*args,**kwargs):
+            start = perf_counter()
+            val = func(*args,**kwargs)
+            end = perf_counter()
+            print(f"⏳ {description}: {end - start}")
+            return val
+        return wrapper
+    return outer
+
 class Timer(object):
     def __init__(self, description):
         self.description = description
@@ -55,18 +67,20 @@ def check_and_set_default(data):
     for prop in validate:
         data[prop] = validate[prop](data.get(prop))
 
-def make_request():
-    url = os.getenv('COUNT_API_URL') or 'https://api.countapi.xyz/hit/nithp/NITH_RESULT_API'
+def make_request(key):
+    url = f'https://api.countapi.xyz/hit/nithp/{key}'
     req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0'})
     res = urllib.request.urlopen(req,timeout=5)
 
-def hit_counter(func):
-    @wraps(func)
-    def wrapper(*args,**kwargs):
-        try:
-            threading.Thread(target=make_request).start()
-        except Exception as e:
-            print("API Hit Counter failed", e)
-        finally:
-            return func(*args,**kwargs)
-    return wrapper
+def hit_counter(key):
+    def outer(func):
+        @wraps(func)
+        def wrapper(*args,**kwargs):
+            try:
+                threading.Thread(target=make_request,args=(key,)).start()
+            except Exception as e:
+                print("API Hit Counter failed", e)
+            finally:
+                return func(*args,**kwargs)
+        return wrapper
+    return outer

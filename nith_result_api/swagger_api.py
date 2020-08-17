@@ -3,19 +3,20 @@ from flask import url_for
 
 import time
 
-from .utils import check_and_set_default, query_db, hit_counter, Timer
+from .utils import check_and_set_default, query_db, hit_counter, timer
+from cache import cache
 
-@hit_counter
+@timer('api read_all')
+@hit_counter('NITH_RESULT_API')
+@hit_counter('NITH_RESULT_API_READ_ALL')
+@cache.cached(timeout=600,query_string=True)
+@hit_counter('NITH_RESULT_API_READ_ALL_DATABASE')
 def read_all():
     args = ('name','branch','roll','subject_code','min_cgpi','max_cgpi','min_sgpi','max_sgpi','next_cursor','limit','sort_by_cgpi')
     data = {}
     for arg in args:
         data[arg] = connexion.request.args.get(arg)
-
-    with Timer("get_all_data"):
-        resp = get_all_data(data)
-
-    return resp
+    return get_all_data(data)
 
 def get_all_data(data,exceptional_limit=False):
     check_and_set_default(data)
@@ -78,7 +79,11 @@ def get_all_data(data,exceptional_limit=False):
         }
     }
 
-@hit_counter
+@timer('api read')
+@hit_counter('NITH_RESULT_API')
+@hit_counter('NITH_RESULT_API_READ')
+@cache.cached(timeout=600,query_string=True)
+@hit_counter('NITH_RESULT_API_READ_DATABASE')
 def read(roll):
     st = time.time()
     data = {
@@ -147,7 +152,8 @@ def read(roll):
     return data
 
 subject_list = []
-@hit_counter
+@timer('api read_subjects')
+@hit_counter('NITH_RESULT_API')
 def read_subjects():
     if subject_list:
         return subject_list
