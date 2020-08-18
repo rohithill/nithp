@@ -1,5 +1,7 @@
 from flask import Flask, Blueprint, render_template, redirect, request, url_for, jsonify
+
 from nith_result_api import read as get_single_result, get_all_data
+from utils import timer
 from cache import cache
 
 import json
@@ -36,6 +38,7 @@ def home():
         years=['2015','2016','2017','2018','2019'])
 
 @result.route('/student')
+@timer('WEBSITE read(roll)')
 @cache.cached(timeout=600,query_string=True)
 def result_student():
     rollno = request.args.get('roll')
@@ -43,6 +46,7 @@ def result_student():
     return render_template('nith_result/single_student.html',result=result)
 
 @result.route('/search')
+@timer('WEBSITE search')
 @cache.cached(timeout=600,query_string=True)
 def search():
     year = request.args.get('year')
@@ -66,7 +70,6 @@ def search():
     results = get_all_data(data,exceptional_limit=True)
     et = time.perf_counter()
     time_taken = et - st
-    print("⏳Time taken to process Search query: ", time_taken)
 
     return render_template('nith_result/search_result.html',
         results=results['data'],

@@ -3,7 +3,7 @@ import urllib.request, os, threading
 from functools import wraps
 from time import perf_counter
 
-MAX_ROWS_LIMIT = 1000
+MAX_ROWS_LIMIT = 1000 # Maximum no of students returned in API request
 
 def query_db(query, args=tuple(), one=False,limit=0):
     conn = sqlite3.connect('file:nithResult.db?mode=ro',uri=True)
@@ -13,27 +13,6 @@ def query_db(query, args=tuple(), one=False,limit=0):
     conn.close()
 
     return (rv[0] if rv else None) if one else rv
-
-def timer(description):
-    def outer(func):
-        @wraps(func)
-        def wrapper(*args,**kwargs):
-            start = perf_counter()
-            val = func(*args,**kwargs)
-            end = perf_counter()
-            print(f"⏳ {description}: {end - start}")
-            return val
-        return wrapper
-    return outer
-
-class Timer(object):
-    def __init__(self, description):
-        self.description = description
-    def __enter__(self):
-        self.start = perf_counter()
-    def __exit__(self, type, value, traceback):
-        self.end = perf_counter()
-        print(f"⏳ {self.description}: {self.end - self.start}")
 
 def check_and_set_default(data):
     defaults = {
@@ -68,9 +47,12 @@ def check_and_set_default(data):
         data[prop] = validate[prop](data.get(prop))
 
 def make_request(key):
-    url = f'https://api.countapi.xyz/hit/nithp/{key}'
-    req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0'})
-    res = urllib.request.urlopen(req,timeout=5)
+    try:
+        url = f'https://api.countapi.xyz/hit/nithp/{key}'
+        req = urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0'})
+        res = urllib.request.urlopen(req,timeout=5)
+    except Exception as e:
+        print("❌ API Hit Counter failed", e)
 
 def hit_counter(key):
     def outer(func):
@@ -79,7 +61,7 @@ def hit_counter(key):
             try:
                 threading.Thread(target=make_request,args=(key,)).start()
             except Exception as e:
-                print("API Hit Counter failed", e)
+                print("❌ Thread creation error hit counter", e)
             finally:
                 return func(*args,**kwargs)
         return wrapper
