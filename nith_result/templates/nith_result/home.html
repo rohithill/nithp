@@ -71,21 +71,8 @@
 </div>
 <div class="container">
   <h3>How to Use</h3>
-  <p>All fields are joined by <b>AND</b> operation. Use <b>%</b> to match and filter name and roll number. Leaving
+  <p>All fields are joined by <b>AND</b> operation. Use <b>%</b> ( SQL wildcard matching) to match and filter name and roll number. Leaving
     everything empty will give result of all
     students.</p>
-</div>
-<div class="container">
-  <p><b>Eg</b>: Find all Student is CSE (B Tech) department of 2017 batch who has Rohit in their name.</p>
-  <p>Name as matched by substring. Roll No of CSE 2017 batch starts with 175. We will use % operator to match anything
-    after this prefix.</p>
-</div>
-<div class="container">
-  <p>
-    So we can write <br>
-    Student Name : Rohit <br>
-    Roll No : 175% <br>
-  </p>
-</div>
 </div>
 {% endblock %}

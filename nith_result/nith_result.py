@@ -66,7 +66,7 @@ def search():
     results = get_all_data(data,exceptional_limit=True)
     et = time.perf_counter()
     time_taken = et - st
-    print("⏲Time taken to process Search query: ", time_taken)
+    print("⏳Time taken to process Search query: ", time_taken)
 
     return render_template('nith_result/search_result.html',
         results=results['data'],
