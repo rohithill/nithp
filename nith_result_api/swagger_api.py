@@ -103,7 +103,7 @@ def get_all_data(data,exceptional_limit=False):
         # Heroku currently has 3.22.0, hence it will not work on heroku as of now.
         # In that case providing following implementation.
         sort_parameter = 'rank_college_cgpi'
-        data['next_cursor'] = int(data['next_cursor'])
+        # data['next_cursor'] = int(data['next_cursor'])
 
     result = query_db(f'''
             SELECT * from student
