@@ -2,8 +2,8 @@ swagger: "2.0"
 info:
   description: |
     This API provides access to NIT Hamirpur result. Contributions are welcome.
-
-    Database updated on 14 Aug 2020. Added result of July 2020.
+    
+    Database Last updated: April 2021.
     
     **gzip** compression is supported. [Learn more](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding)
 
