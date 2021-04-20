@@ -34,8 +34,10 @@ def home():
             'ECE_DUAL',
             'ELECTRICAL',
             'MATERIAL',
-            'MECHANICAL'],
-        years=['2015','2016','2017','2018','2019'])
+            'MECHANICAL',
+            'ENG_PHYSICS',
+            'MAC'],
+        years=['2015','2016','2017','2018','2019','2020'])
 
 @result.route('/student')
 @timer('WEBSITE read(roll)')

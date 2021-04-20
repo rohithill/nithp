@@ -165,3 +165,21 @@ def read_subjects():
         })
     return subject_list
 
+@timer('GET_BRANCHES')
+@cache.cached(timeout=24*60*60)
+def get_branches():
+    result = query_db("SELECT name,starting_batch,latest_batch from branch")
+    res = []
+    for name,starting_batch,latest_batch in result:
+        res.append(
+            {
+                'name': name,
+                'batches':[i for i in range(starting_batch,latest_batch+1)]
+            }
+        )
+    return res
+
+@cache.cached(timeout=24*60*60)
+def get_result_updated_date():
+    result = query_db("SELECT created_on from meta_info")
+    return result[0][0]

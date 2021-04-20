@@ -1,1 +1,1 @@
-from .swagger_api import read, read_all, read_subjects, get_all_data
+from .swagger_api import read, read_all, read_subjects, get_all_data, get_branches, get_result_updated_date

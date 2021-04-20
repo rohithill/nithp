@@ -55,7 +55,8 @@ paths:
           in: query
           description:
             "Response will contain those students whose branch is as stated. 
-            Matching is exact and case sensitive."
+            Matching is exact and case sensitive. You are recommended to know values by 
+            querying `/branches` api route"
           required: false
           type: string
           enum:
@@ -69,6 +70,8 @@ paths:
             - ELECTRICAL 
             - MATERIAL 
             - MECHANICAL
+            - ENG_PHYSICS
+            - MAC
         - name: subject_code
           in: query
           description: >
@@ -83,9 +86,9 @@ paths:
           required: false
           type: number
           format: float
-          default: 0
-          minimum: 0
-          maximum: 10
+          default: 0.0
+          minimum: 0.0
+          maximum: 10.0
         - name: max_cgpi
           in: query
           description: >
@@ -93,9 +96,9 @@ paths:
           required: false
           type: number
           format: float
-          default: 10
-          minimum: 0
-          maximum: 10
+          default: 10.0
+          minimum: 0.0
+          maximum: 10.0
         - name: min_sgpi
           in: query
           description: >
@@ -103,9 +106,9 @@ paths:
           required: false
           type: number
           format: float
-          default: 0
-          minimum: 0
-          maximum: 10
+          default: 0.0
+          minimum: 0.0
+          maximum: 10.0
         - name: max_sgpi
           in: query
           description: >
@@ -113,9 +116,9 @@ paths:
           required: false
           type: number
           format: float
-          default: 10
-          minimum: 0
-          maximum: 10
+          default: 10.0
+          minimum: 0.0
+          maximum: 10.0
         - name: next_cursor
           in: query
           description: |
@@ -217,6 +220,37 @@ paths:
                   type: "string"
                 "subject_code":
                   type: "string"
+  /branches:
+    get:
+      operationId: nith_result_api.get_branches
+      tags:
+        - Branches
+      summary: Get branches along with batch years
+      responses:
+        200:
+          description: Successfully read branches
+          schema:
+            type: array
+            items:
+              properties:
+                "name":
+                  type: "string"
+                "batches":
+                  type: array
+                  items:
+                    type: integer
+  /last_updated:
+    get:
+      operationId: nith_result_api.get_result_updated_date
+      tags:
+        - INFO
+      summary: Contains update date of result database
+      responses:
+        200:
+          description: Successfully read data
+          schema:
+            type: string
+
 definitions:
   Student:
     type: object
