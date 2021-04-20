@@ -8,6 +8,9 @@ from docs.main import docs
 from cache import cache
 from gzipped import gzipped
 
+import logging
+log = logging.getLogger('werkzeug')
+# log.setLevel(logging.ERROR)
 
 connexionApp = connexion.App(__name__,options={'swagger_path': swagger_ui_3_path,'swagger_url': 'doc'})
 app = connexionApp.app
@@ -27,6 +30,11 @@ connexionApp.add_api('nith_result_api/swagger.yml')
 
 app.finalize_request = gzipped(app.finalize_request)
 
+@app.after_request
+def add_header(response):
+    response.cache_control.max_age = 300
+    return response
+
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -35,9 +43,9 @@ def home():
 def about():
     return "Hi! I'm SimpleX."
 app2 = app
-app = connexionApp 
+app = connexionApp
 if __name__ == '__main__':
     # print(app.url_map) # To print all paths
     # print(connexionApp.app.url_map)
     app.run(debug=True)
-    
+
