@@ -32,7 +32,7 @@ app.finalize_request = gzipped(app.finalize_request)
 
 @app.after_request
 def add_header(response):
-    response.cache_control.max_age = 300
+    response.cache_control.max_age = 60 * 60 * 24 * 7 # For a week
     return response
 
 @app.route('/')
